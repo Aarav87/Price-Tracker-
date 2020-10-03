@@ -35,30 +35,37 @@ const inputStyle = {
 }
 
 export default class AddProduct extends Component {
+    constructor(props) {
+        super(props);
 
-    onInputChange(e) {
-        this.props.onInputChange && this.props.onInputChange(e)
+        this.state = {
+            url: window.location.href
+        }
+
     }
 
-    addProduct(e) {
-        this.props.addProduct && this.props.addProduct(e)
+    onClose(e) {
+        this.props.onClose && this.props.onClose(e)
+    }
+
+    handler() {
+        this.props.handler(this.state.url)
     }
 
     render() {
         if(this.props.show) {
             return null;
-        }
+        }   
         return(
             <div style={backdroupStyle}>
                 <div style={closeIconStyle}>
                     <CloseOutlined onClick={e => this.onClose(e)}/>
                 </div>
                 <div style={inputStyle}>
-                    <input type="text" name="url" value={window.location.href} onChange={this.onInputChange}/>
-                    <input type="number" />
+                    <input type="text" name="url" value={this.state.url}/>    
                 </div>
                 <div>
-                    <button onClick={e => this.addProduct(e)}>Add Product</button>
+                    <button onClick={e => this.handler(e)}>Add Product</button>
                 </div>
                     
             </div>

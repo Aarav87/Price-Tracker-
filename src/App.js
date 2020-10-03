@@ -15,16 +15,14 @@ class App extends Component {
       pricepoint: '',
       showAddProduct: true,
       users: null, 
-      url: "",
+      url: "Link",
       desired_price: 0
     }
 
-    this.handleClick = this.handleClick.bind(this)
-    this.onInputChange = this.onInputChange.bind(this)
     this.showAddProduct = this.showAddProduct.bind(this)
-    this.addProduct = this.addProduct.bind(this)
+    this.handler = this.handler.bind(this)
   }
-
+  
   componentDidMount() {
     db.collection('/users/7pIF37Zils2CX14bZIaP/products')
       .get()
@@ -40,60 +38,56 @@ class App extends Component {
 
   }
 
+
   showAddProduct() {
     this.setState({showAddProduct: !this.state.showAddProduct})
   }
-
-  addProduct() {
-    db.collection('/users/7pIF37Zils2CX14bZIaP/products')
-      .add({
-        url: this.state.url,
-        desired_price: this.state.desired_price
-      });
-
-    db.collection("students")
-      .get()
-      .then(snapshot => {
-        const users = [];
-        snapshot.forEach(doc => {
-          const data = doc.data();
-          users.push(data);
-          this.setState({
-            users: users,
-            url: "",
-            desired_price:0
-          });
-        });
-      })
-      .catch(error => console.log(error));
-
-  }
-
-  onInputChange(e) {
-    const name = e.target.name;
-    const value = e.target.value;
-
-    this.setState({ [name]: value });
-  };
-
-  handleClick() {
-    let url = window.location.href;
-    const pricepoint = this.state.pricepoint
   
-    request(url, (error, response, body) => {
-      if(!error && response.statusCode == 200) {
-        const $ = cheerio.load(body)
-        const price = $('.a-span12')
-        const pricev2 = price.text().toString().replace(/\s\s+/g, '')
-        
-        const pricev3 = pricev2.slice(pricev2.indexOf('$') + 2, pricev2.indexOf('DetailsLoad')-17)
-        const finalprice = pricev3.split('.')
-
-        if(finalprice[0] < pricepoint) {
-          alert('Price is lower stupid')
-        }
-      }
+  handler(value) {
+    this.setState({
+      url: value
     })
+
+    const handleClick = () =>  {
+      const url = this.state.url
+  
+      request(url, (error, response, body) => {
+        if(!error && response.statusCode == 200) {
+          const $ = cheerio.load(body)
+          const title = $('.a-container')
+          console.log(title)
+          
+        }
+      })
+    }
+    
+    const addProduct = () => {
+      db.collection('/users/7pIF37Zils2CX14bZIaP/products')
+        .add({
+          url: this.state.url,
+          desired_price: this.state.desired_price
+        });
+
+      db.collection("students")
+        .get()
+        .then(snapshot => {
+          const users = [];
+          snapshot.forEach(doc => {
+            const data = doc.data();
+            users.push(data);
+            this.setState({
+              users: users,
+              url: "",
+              desired_price:0
+            });
+          });
+        })
+        .catch(error => console.log(error));
+
+    }
+
+    setTimeout(handleClick, 30000) 
+    setTimeout(addProduct, 30000) 
   }
 
   render() {
@@ -127,7 +121,7 @@ class App extends Component {
               <button onClick={this.showAddProduct} class="add-product">Add Product</button>
             </div>
           </div>
-          <AddProduct onChange={this.onInputChange} addProduct={this.addProduct} show={this.state.showAddProduct} onClose={this.showAddProduct} />
+          <AddProduct handler={this.handler} show={this.state.showAddProduct} onClose={this.showAddProduct} />
         </header>
       </div>
     );
