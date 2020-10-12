@@ -39,8 +39,11 @@ export default class AddProduct extends Component {
         super(props);
 
         this.state = {
-            url: window.location.href
+            url: window.location.href,
+            desired_price: 15
         }
+
+        this.onChange = this.onChange.bind(this)
 
     }
 
@@ -48,8 +51,22 @@ export default class AddProduct extends Component {
         this.props.onClose && this.props.onClose(e)
     }
 
-    handler() {
-        this.props.handler(this.state.url)
+    url() {
+        this.props.url(this.state.url)
+    }
+
+    desiredPrice() {
+        this.props.desiredPrice(this.state.desired_price)
+    }
+
+    handler(e) {
+        this.props.handler && this.props.handler(e)
+    }
+
+    onChange(e) {
+        this.setState({
+            [e.target.name]: e.target.value
+        })
     }
 
     render() {
@@ -62,10 +79,11 @@ export default class AddProduct extends Component {
                     <CloseOutlined onClick={e => this.onClose(e)}/>
                 </div>
                 <div style={inputStyle}>
-                    <input type="text" name="url" value={this.state.url}/>    
+                    <input type="text" name="url" value={this.state.url} onChange={this.onChange}/> 
+                    <input type="number" name="desired_price" value={this.state.desired_price} onChange={this.onChange} />
                 </div>
                 <div>
-                    <button onClick={e => this.handler(e)}>Add Product</button>
+                    <button onClick={e => {this.url(); this.desiredPrice(); setTimeout(this.handler(e), 30000)}}>Add Product</button>
                 </div>
                     
             </div>

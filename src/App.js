@@ -6,88 +6,117 @@ import cheerio from 'cheerio';
 import { InputNumber } from 'antd';
 import AddProduct from './components/AddProduct';
 import {db, auth} from './firebase'
+import ProductList from './components/ProductList'
 
 class App extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      pricepoint: '',
       showAddProduct: true,
       users: null, 
+      uid: '',
       url: "Link",
-      desired_price: 0
+      productTitle: '',
+      desired_price: 0,
+      currentProductPrice: 0,
+      imageUrl: ''
     }
 
     this.showAddProduct = this.showAddProduct.bind(this)
+    this.getUrl = this.getUrl.bind(this)
+    this.getDesiredPrice = this.getDesiredPrice.bind(this)
     this.handler = this.handler.bind(this)
   }
   
   componentDidMount() {
-    db.collection('/users/7pIF37Zils2CX14bZIaP/products')
-      .get()
-      .then( snapshot => {
-        const users = []
-        snapshot.forEach(doc => {
-          const data = doc.data()
-          users.push(data)
+    auth.signInAnonymously().catch(function(error) {
+      console.log('error')
+    });
+    auth.onAuthStateChanged((user) => {
+      if (user) {
+        var uid = user.uid;
+        this.setState({
+          uid: uid
         })
-        this.setState({users: users})
-      })
-      .catch(error => console.log(error))
-
+      } else {
+        console.log('error')
+      }
+        
+    });  
   }
-
 
   showAddProduct() {
     this.setState({showAddProduct: !this.state.showAddProduct})
   }
-  
-  handler(value) {
+
+  getUrl(value) {
     this.setState({
       url: value
     })
+  }
 
-    const handleClick = () =>  {
-      const url = this.state.url
+  getDesiredPrice(value) {
+    this.setState({
+      desired_price: value
+    })
+    
+  }
   
-      request(url, (error, response, body) => {
-        if(!error && response.statusCode == 200) {
-          const $ = cheerio.load(body)
-          const title = $('.a-container')
-          console.log(title)
-          
+  handler() {
+    const getProductDetails = () => {
+      var options = {
+        url: this.state.url,
+        headers: {
+          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.121 Safari/537.36'
+        }
+      };
+
+      request(options, (error, response, html) => {
+        if (!error) {
+          // Use Cheerio to load the page.
+          var $ = cheerio.load(html);
+          const productTitle = $('#titleSection').text().replace(/\s\s+/g, '')
+          const currentPrice = $('#priceblock_ourprice').text().replace(/\s\s+/g, '')
+          const imageUrl = $('#landingImage').attr("data-old-hires")
+
+          this.setState({
+            productTitle: productTitle,
+            currentProductPrice: currentPrice,
+            imageUrl: imageUrl
+          })
         }
       })
     }
-    
+
     const addProduct = () => {
-      db.collection('/users/7pIF37Zils2CX14bZIaP/products')
+      db.collection(`/users/${this.state.uid}/products`)
         .add({
           url: this.state.url,
-          desired_price: this.state.desired_price
+          productTitle: this.state.productTitle,
+          currentProductPrice: this.state.currentProductPrice,
+          desired_price: this.state.desired_price,
+          imageUrl: this.state.imageUrl
         });
 
-      db.collection("students")
+      db.collection(`/users/${this.state.uid}/products`)
         .get()
         .then(snapshot => {
           const users = [];
-          snapshot.forEach(doc => {
-            const data = doc.data();
+          snapshot.forEach(document => {
+            const data = document.data();
             users.push(data);
+            console.log(users)
             this.setState({
-              users: users,
-              url: "",
-              desired_price:0
+              users: users
             });
           });
         })
         .catch(error => console.log(error));
-
     }
 
-    setTimeout(handleClick, 30000) 
-    setTimeout(addProduct, 30000) 
+    setTimeout(getProductDetails, 5000)
+    setTimeout(addProduct, 10000)
   }
 
   render() {
@@ -95,33 +124,21 @@ class App extends Component {
       <div class="App">
         <header class="App-header">
           <div class="product-list">
-            <div class="product" >
-              <a href="https://www.amazon.ca/Redragon-K582-Mechanical-Ergonomic-Actuation/dp/B07KCRTN9Q/ref=redir_mobile_desktop?ie=UTF8&aaxitk=PXxuFPVOgpUiUysGc2oqhg&hsa_cr_id=2788190190801&pd_rd_r=7664c339-b954-4e7f-b6c5-fecdee9dd437&pd_rd_w=vWYIQ&pd_rd_wg=8fJBf&ref_=sbx_be_s_sparkle_mcd_asin_0_img" target="_blank">
-                <img src="https://images-na.ssl-images-amazon.com/images/I/61nmLAAtdlL._AC_SL1500_.jpg" />
-                <h1>Redragon K582 SURARA RGB Gaming Keyboard...</h1>
-                <p>Current Price: CDN$ 61.74</p>
-              </a>
-              <div class="desired-price-input">
-                <input type="number" min="0" placeholder="Desired Price"/> 
+            {
+              this.state.users && 
+              this.state.users.map(user => {
+                return(
+                  <ProductList list={user} />
+                )
+              })
+            }
+          </div>
+            <div class="add-product-div">
+              <div style={{paddingTop: '2px'}}>
+                <button onClick={this.showAddProduct} class="add-product">Add Product</button>
               </div>
             </div>
-          </div>
-          {
-            this.state.users && 
-            this.state.users.map(user => {
-              return (
-                <div>
-                  <p>{user.desired_price}</p>
-                </div>
-              )
-            })
-          }
-          <div class="add-product-div">
-            <div style={{paddingTop: '2px'}}>
-              <button onClick={this.showAddProduct} class="add-product">Add Product</button>
-            </div>
-          </div>
-          <AddProduct handler={this.handler} show={this.state.showAddProduct} onClose={this.showAddProduct} />
+            <AddProduct url={this.getUrl} desiredPrice={this.getDesiredPrice} handler={this.handler} show={this.state.showAddProduct} onClose={this.showAddProduct} />
         </header>
       </div>
     );

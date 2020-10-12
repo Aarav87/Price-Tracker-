@@ -1,46 +1,5 @@
-.product {
-    border: 1px solid rgb(206, 212, 218);
-    text-decoration: none;
-    height: auto;
-}
-
 .product-list {
     max-height: 80%;
-}
-.product img {
-    height: 75px;
-    width: 125px;
-    padding: 10px;
-    float: left;
-}
-
-.product h1 {
-    font-family: Verdana, Geneva, sans-serif;
-    font-size: 15px;
-    padding: 10px;
-    padding-left: 160px;
-    text-decoration: none; 
-}
-
-.product p {
-    text-decoration: none;
-    padding-left: 155px;
-    font-family: Verdana, Geneva, sans-serif;
-}
-
-.product a {
-    text-decoration: none;
-}
-
-.desired-price-input {
-    padding-left: 155px;
-    padding-top: 1px;
-    padding-bottom: 5px
-    
-}
-
-.desired-price-input input {
-    width: 200px;
 }
 
 .add-product {
