@@ -46,12 +46,9 @@ const desiredPriceInputStyle = {
 const ProductList = ({ list }) => {
     return (
         <div style={product} >
-            {
-                console.log(console.log(list))
-            }
             <a stye={productLink} href={list.url} target="_blank">
                 <img style={productImg} src={list.imageUrl} />
-                <h1 style={productTitle}>{list.productTitle}...</h1>
+                <h1 style={productTitle}>{list.productTitle.slice(0, 37)}...</h1>
                 <p style={productPrice}>Current Price: {list.currentProductPrice}</p>
             </a>
             <div style={desiredPriceInput}>

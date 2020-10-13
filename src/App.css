@@ -23,3 +23,9 @@
 .App {
     overflow-y: hidden;
 }
+
+.spinner {
+    position: fixed;
+    top: 200px;
+    right: 180px;
+}

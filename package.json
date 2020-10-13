@@ -21,6 +21,7 @@
     "puppeteer": "^5.2.1",
     "raf": "3.4.1",
     "react": "^16.13.1",
+    "react-activity": "^1.2.2",
     "react-dom": "^16.13.1",
     "react-frame-component": "^4.1.2",
     "request": "^2.88.2",
