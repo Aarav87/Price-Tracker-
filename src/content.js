@@ -4,20 +4,25 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import Frame, { FrameContextConsumer }from 'react-frame-component';
 import App from "./App";
+import request from 'request';
+import cheerio from 'cheerio';
+import {db, auth, arrayUpdate} from './firebase';
+
 class Main extends React.Component {
-    render() {
-        return (
-            <Frame head={[<link type="text/css" rel="stylesheet" href={chrome.runtime.getURL("/static/css/content.css")} ></link>]}> 
-               <FrameContextConsumer>
-               {
-                  ({document, window}) => {
-                    return <App document={document} window={window} isExt={true}/> 
-                  }
-                }
-                </FrameContextConsumer>
-            </Frame>
-        )
-    }
+  render() {  
+    return (
+        <Frame head={[<link type="text/css" rel="stylesheet" href={chrome.runtime.getURL("/static/css/content.css")} ></link>]}> 
+            <FrameContextConsumer>
+            {
+              ({document, window}) => {
+                return <App document={document} window={window} isExt={true} /> 
+              }
+            }
+            
+            </FrameContextConsumer>
+        </Frame>
+    )
+  }
 }
 
 const app = document.createElement('div');

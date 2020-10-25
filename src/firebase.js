@@ -16,5 +16,5 @@ firebase.initializeApp(firebaseConfig)
 
 export const auth = firebase.auth()
 export const db = firebase.firestore()
-
+export const arrayUpdate = firebase.firestore.FieldValue
 export default firebase

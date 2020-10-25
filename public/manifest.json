@@ -4,8 +4,8 @@
   "version": "1.1",
   "manifest_version": 2,
   "background": {
-    "scripts": ["app/background.js"],
-    "persistent": true
+    "persistent": true,
+    "scripts":  ["app/background.js"]
   },
   "icons": { 
     "16": "icon16.png",

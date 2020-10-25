@@ -5,10 +5,11 @@ import request from 'request';
 import cheerio from 'cheerio';
 import { InputNumber } from 'antd';
 import AddProduct from './components/AddProduct';
-import {db, auth} from './firebase';
+import {db, auth, arrayUpdate} from './firebase';
 import ProductList from './components/ProductList';
 import { Spinner } from 'react-activity';
 import 'react-activity/dist/react-activity.css';
+import { Line } from 'react-chartjs-2';
 
 class App extends Component {
   constructor(props) {
@@ -32,8 +33,8 @@ class App extends Component {
     this.getDesiredPrice = this.getDesiredPrice.bind(this)
     this.handler = this.handler.bind(this)
     this.updateList = this.updateList.bind(this)
-    this.priceMet = this.priceMet.bind(this)
     this.checkPrice = this.checkPrice.bind(this)
+    this.priceMet = this.priceMet.bind(this)
   }
   
   componentDidMount() {
@@ -54,7 +55,8 @@ class App extends Component {
 
     setTimeout(this.updateList, 5000)
     setTimeout(this.priceMet, 10000)
-    
+    setTimeout(this.priceMet, 15000)
+
   }
 
   updateList() {
@@ -71,7 +73,6 @@ class App extends Component {
           });
         });
       })
-    
   }
 
   showAddProduct() {
@@ -123,13 +124,15 @@ class App extends Component {
 
     const addProduct = () => {
       db.collection(`/users/${this.state.uid}/products`)
-        .add({
+        .add({ 
           url: this.state.url,
           productTitle: this.state.productTitle,
           currentProductPrice: this.state.currentProductPrice,
           desired_price: this.state.desired_price,
           imageUrl: this.state.imageUrl,
-          docID: this.state.documentID
+          docID: this.state.documentID,
+          priceHistory: [],
+          dateRecorded: []
         })
         .then((docRef) => {
           this.setState({
@@ -152,41 +155,58 @@ class App extends Component {
     setTimeout(this.updateList, 9000)
 
   }
-
+  
   checkPrice() {
-    if(Array.isArray(this.state.users) || this.state.user.length) {
+    if(Array.isArray(this.state.users) || !this.state.users === null) {
       this.state.users.forEach(item => {
         const url = item.url
-        console.log(item)
-        var options = {
-          url: this.state.url,
-          headers: {
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.121 Safari/537.36'
-          }
-        }
 
-        request(options, (error, response, html) => {
-          if (!error) {
-            // Use Cheerio to load the page.
-            var $ = cheerio.load(html);
-            const currentPrice = $('#priceblock_ourprice').text().replace(/\s\s+/g, '')
-            const docID = item.docID
-            
-            var ref = db.collection('users').doc(this.state.uid).collection('products').doc(docID)
-            ref.update({
-              currentProductPrice: "51"  
-            })
+        setInterval(() => {
+          var options = {
+            url: url,
+            headers: {
+              'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.121 Safari/537.36'
+            }
           }
-        })
+          
+          request(options, (error, response, html) => {
+            if (!error) {
+              // Use Cheerio to load the page.
+              var $ = cheerio.load(html);
+              const currentPrice = $('#priceblock_ourprice').text().replace(/\s\s+/g, '')
+              const docID = item.docID
+              const priceHistory = item.priceHistory
+              priceHistory.push(currentPrice)
+
+              const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
+              const today = new Date();
+              const dd = String(today.getDate())
+              const mm = String(today.getMonth())
+              const yyyy = String(today.getFullYear())
+
+              const date = `${months[mm]} ${dd} ${yyyy}`
+              const dateRecorded = item.dateRecorded  
+              dateRecorded.push(date)
+
+              var ref = db.collection('users').doc(this.state.uid).collection('products').doc(docID)
+              ref.update({
+                currentProductPrice: currentPrice,
+                priceHistory: priceHistory,
+                dateRecorded: dateRecorded
+              })
+            }
+          })
+        }, 5000);
       })
     } else {
       console.log('error')
     }
   }
-  
+
   priceMet() {
-    if(Array.isArray(this.state.users) || this.state.user.length) {
+    if(Array.isArray(this.state.users) || !this.state.users === null) {
       this.state.users.forEach(item => {
+        console.log('comparing price points...')
         const currentProductPrice = parseInt(item.currentProductPrice.slice(5, item.currentProductPrice.length), 10)
         const desiredPrice = parseInt(item.desired_price, 10)
 
@@ -200,7 +220,7 @@ class App extends Component {
       console.log('error')
     }
   }
-
+  
   render() {
     if(this.state.loading) {
       return (
