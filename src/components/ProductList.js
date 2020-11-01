@@ -3,7 +3,7 @@ import React, { Component } from 'react'
 const product = {
     border: '1px solid rgb(206, 212, 218)',
     textDecoration: 'none',
-    height: 'auto',
+    maxHeight: 'auto',
     paddingTop: '10px'
 }
 
@@ -17,14 +17,14 @@ const productImg = {
 const productTitle = {
     fontFamily: 'Verdana, Geneva, sans-serif',
     fontSize: '15px',
-    padding: '10px',
-    paddingLeft: '160px',
+    paddingTop: '7px',
+    paddingLeft: '150px',
     textDecoration: 'none'
 }
 
 const productPrice = {
     textDecoration: 'none',
-    paddingLeft: '155px',
+    paddingLeft: '150px',
     fontFamily: 'Verdana, Geneva, sans-serif'
 }
 
@@ -33,7 +33,7 @@ const productLink = {
 }
 
 const desiredPriceInput = {
-    paddingLeft: '155px',
+    paddingLeft: '150px',
     paddingTop: '1px',
     paddingBottom: '5px'
     
@@ -49,7 +49,7 @@ const ProductList = ({ list }) => {
             <a stye={productLink} href={list.url} target="_blank">
                 <img style={productImg} src={list.imageUrl} />
                 <h1 style={productTitle}>{list.productTitle.slice(0, 37)}...</h1>
-                <p style={productPrice}>Current Price: {list.currentProductPrice}</p>
+                <p style={productPrice}>Current Price: {list.currentProductPrice.replace(/\s+/g, '')}</p>
             </a>
             <div style={desiredPriceInput}>
                 <input style={desiredPriceInputStyle} type="number" min="0" value={list.desired_price} placeholder="Desired Price"/> 

@@ -10,6 +10,7 @@ import ProductList from './components/ProductList';
 import { Spinner } from 'react-activity';
 import 'react-activity/dist/react-activity.css';
 import { Line } from 'react-chartjs-2';
+import emailjs from 'emailjs-com'
 
 class App extends Component {
   constructor(props) {
@@ -54,7 +55,7 @@ class App extends Component {
     });  
 
     setTimeout(this.updateList, 5000)
-    setTimeout(this.priceMet, 10000)
+    setTimeout(this.checkPrice, 10000)
     setTimeout(this.priceMet, 15000)
 
   }
@@ -206,12 +207,26 @@ class App extends Component {
   priceMet() {
     if(Array.isArray(this.state.users) || !this.state.users === null) {
       this.state.users.forEach(item => {
-        console.log('comparing price points...')
         const currentProductPrice = parseInt(item.currentProductPrice.slice(5, item.currentProductPrice.length), 10)
         const desiredPrice = parseInt(item.desired_price, 10)
 
         if(currentProductPrice < desiredPrice) {
           console.log(`PRICE OF ${item.productTitle} IS LOWER.`)
+          emailjs.send("gmail","template_lgncm65", {
+            to_name: "aarav332211@gmail.com",
+            from_name: "Price Tracker",
+            product_name: `${item.productTitle.slice(0, 40)}`,
+            message: `The price of ${item.productTitle.slice(0, 40)} is below your desired price and is now in your price range! Go check it out at ${item.url}`,
+          }, "user_y8NpFi4fIZIH8djmytjIA");
+
+          var ref = db.collection('users').doc(this.state.uid).collection('products').doc(item.docID)
+          ref.delete()
+          
+          this.setState({
+            loading: true
+          })
+
+          setTimeout(this.updateList, 3000)
         } else {
           console.log(`PRICE OF ${item.productTitle} IS HIGHER`)
         }
