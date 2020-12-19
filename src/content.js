@@ -48,3 +48,6 @@ function toggle(){
      app.style.display = "none";
    }
 }
+
+const bgPage = chrome.extension.getBackgroundPage();
+bgPage.signInWithPopup();

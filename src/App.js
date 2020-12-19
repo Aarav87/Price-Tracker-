@@ -3,14 +3,17 @@ import './App.css';
 import logo from './logo.png';
 import request from 'request';
 import cheerio from 'cheerio';
-import { InputNumber } from 'antd';
+import { InputNumber, Button, Tooltip } from 'antd';
 import AddProduct from './components/AddProduct';
 import {db, auth, arrayUpdate} from './firebase';
 import ProductList from './components/ProductList';
+import { PlusCircleFilled } from '@ant-design/icons/';
+import Login from './components/Login';
+import SignUp from './components/SignUp';
 import { Spinner } from 'react-activity';
 import 'react-activity/dist/react-activity.css';
-import { Line } from 'react-chartjs-2';
-import emailjs from 'emailjs-com'
+import emailjs from 'emailjs-com';
+import UserProfile from './components/UserProfile';
 
 class App extends Component {
   constructor(props) {
@@ -18,58 +21,64 @@ class App extends Component {
 
     this.state = {
       showAddProduct: true,
-      users: null, 
-      uid: '',
-      url: "Link",
+      showUserProfile: true,
+      showSignUp: true,
+      showLogin: true,
+      items: null, 
+      users: null,
+      url: "",
       productTitle: '',
       desired_price: 0,
       currentProductPrice: 0,
       imageUrl: '',
       loading: true,
-      documentID: ''
+      user: null
     }
 
     this.showAddProduct = this.showAddProduct.bind(this)
+    this.showUserProfile = this.showUserProfile.bind(this)
+    this.showLogin = this.showLogin.bind(this)
+    this.showSignUp = this.showSignUp.bind(this)
     this.getUrl = this.getUrl.bind(this)
     this.getDesiredPrice = this.getDesiredPrice.bind(this)
     this.handler = this.handler.bind(this)
     this.updateList = this.updateList.bind(this)
     this.checkPrice = this.checkPrice.bind(this)
     this.priceMet = this.priceMet.bind(this)
+    this.getProductDetails = this.getProductDetails.bind(this)
+    this.addProduct = this.addProduct.bind(this)
   }
   
   componentDidMount() {
-    auth.signInAnonymously().catch(function(error) {
-      console.log('error')
-    });
-    auth.onAuthStateChanged((user) => {
+    auth.onAuthStateChanged((user) => {      
       if (user) {
-        var uid = user.uid;
-        this.setState({
-          uid: uid
-        })
+        this.setState({ user })
+
+        this.showLogin()
+        setTimeout(this.updateList, 4000)
+        setTimeout(this.checkPrice, 8000)
+        setTimeout(this.priceMet, 12000)
+
       } else {
-        console.log('error')
-      }
-        
-    });  
+        this.setState({
+          user: null,
+          loading: false
+        })
 
-    setTimeout(this.updateList, 5000)
-    setTimeout(this.checkPrice, 10000)
-    setTimeout(this.priceMet, 15000)
-
+      }    
+    });
   }
 
   updateList() {
-    db.collection(`/users/${this.state.uid}/products`)
+    db.collection(`/users/${this.state.user.email}/products`)
       .get()
       .then(snapshot => {
-        const users = [];
+        const items = [];
         snapshot.forEach(document => {
           const data = document.data();
-          users.push(data);
+          items.push(data);
           this.setState({
-            users: users,
+            items: items,
             loading: false
           });
         });
@@ -78,6 +87,18 @@ class App extends Component {
 
   showAddProduct() {
     this.setState({showAddProduct: !this.state.showAddProduct})
+  }
+
+  showUserProfile() {
+    this.setState({showUserProfile: !this.state.showUserProfile})
+  }
+
+  showLogin() {
+    this.setState({showLogin: !this.state.showLogin})
+  }
+
+  showSignUp() {
+    this.setState({showSignUp: !this.state.showSignUp})
   }
 
   getUrl(value) {
@@ -89,8 +110,53 @@ class App extends Component {
   getDesiredPrice(value) {
     this.setState({
       desired_price: value
+    })  
+  }
+
+  signOut() {
+    auth.signOut()
+  }
+
+  getProductDetails() {
+    var options = {
+      url: this.state.url,
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.121 Safari/537.36'
+      }
+    };
+
+    request(options, (error, response, html) => {
+      if (!error) {
+        // Use Cheerio to load the page.
+        var $ = cheerio.load(html);
+        const productTitle = $('#titleSection').text().replace(/\s\s+/g, '')
+        var currentPrice = $('#priceblock_ourprice').text().replace(/\s\s+/g, '')
+        const imageUrl = $('#landingImage').attr("data-old-hires")
+
+        if(currentPrice === "") {
+          currentPrice = $('#priceblock_dealprice').text().replace(/\s\s+/g, '')
+        }
+
+        this.setState({
+          productTitle: productTitle.replace('/', ' '),
+          currentProductPrice: currentPrice,
+          imageUrl: imageUrl
+        })
+      }
     })
-    
+  }
+
+  addProduct() {
+    var ref = db.collection('users').doc(this.state.user.email).collection('products').doc(this.state.productTitle)
+    ref.set({ 
+      url: this.state.url,
+      productTitle: this.state.productTitle,
+      currentProductPrice: this.state.currentProductPrice,
+      desired_price: this.state.desired_price,
+      imageUrl: this.state.imageUrl,
+      priceHistory: [],
+      dateRecorded: []
+    })    
   }
   
   handler() {
@@ -98,68 +164,15 @@ class App extends Component {
       loading: true
     })
 
-    const getProductDetails = () => {
-      var options = {
-        url: this.state.url,
-        headers: {
-          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.121 Safari/537.36'
-        }
-      };
-
-      request(options, (error, response, html) => {
-        if (!error) {
-          // Use Cheerio to load the page.
-          var $ = cheerio.load(html);
-          const productTitle = $('#titleSection').text().replace(/\s\s+/g, '')
-          const currentPrice = $('#priceblock_ourprice').text().replace(/\s\s+/g, '')
-          const imageUrl = $('#landingImage').attr("data-old-hires")
-
-          this.setState({
-            productTitle: productTitle,
-            currentProductPrice: currentPrice,
-            imageUrl: imageUrl
-          })
-        }
-      })
-    }
-
-    const addProduct = () => {
-      db.collection(`/users/${this.state.uid}/products`)
-        .add({ 
-          url: this.state.url,
-          productTitle: this.state.productTitle,
-          currentProductPrice: this.state.currentProductPrice,
-          desired_price: this.state.desired_price,
-          imageUrl: this.state.imageUrl,
-          docID: this.state.documentID,
-          priceHistory: [],
-          dateRecorded: []
-        })
-        .then((docRef) => {
-          this.setState({
-            documentID: docRef.id
-          })
-        })
-      
-    }
-
-    const addDocId = () => {
-      var ref = db.collection('users').doc(this.state.uid).collection('products').doc(this.state.documentID)
-      ref.update({
-        docID: this.state.documentID
-      })
-    }
-
-    setTimeout(getProductDetails, 3000)
-    setTimeout(addProduct, 6000)
-    setTimeout(addDocId, 9000)
+    setTimeout(this.getProductDetails, 3000)
+    setTimeout(this.addProduct, 6000)
     setTimeout(this.updateList, 9000)
 
   }
   
   checkPrice() {
-    if(Array.isArray(this.state.users) || !this.state.users === null) {
-      this.state.users.forEach(item => {
+    if(Array.isArray(this.state.items) || !this.state.items === null) {
+      this.state.items.forEach(item => {
         const url = item.url
 
         setInterval(() => {
@@ -174,39 +187,44 @@ class App extends Component {
             if (!error) {
               // Use Cheerio to load the page.
               var $ = cheerio.load(html);
-              const currentPrice = $('#priceblock_ourprice').text().replace(/\s\s+/g, '')
-              const docID = item.docID
-              const priceHistory = item.priceHistory
-              priceHistory.push(currentPrice)
+              var currentPrice = $('#priceblock_ourprice').text().replace(/\s\s+/g, '')
+              const docID = item.productTitle
 
-              const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
+              if(currentPrice === "") {
+                currentPrice = $('#priceblock_dealprice').text().replace(/\s\s+/g, '')
+              }
+
+              const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
               const today = new Date();
               const dd = String(today.getDate())
               const mm = String(today.getMonth())
-              const yyyy = String(today.getFullYear())
+              const date = `${months[mm]} ${dd}`
 
-              const date = `${months[mm]} ${dd} ${yyyy}`
+              const priceHistory = item.priceHistory
               const dateRecorded = item.dateRecorded  
-              dateRecorded.push(date)
 
-              var ref = db.collection('users').doc(this.state.uid).collection('products').doc(docID)
-              ref.update({
-                currentProductPrice: currentPrice,
-                priceHistory: priceHistory,
-                dateRecorded: dateRecorded
-              })
+              if(dateRecorded[dateRecorded.length - 1] != date) {
+                priceHistory.push(currentPrice)
+                dateRecorded.push(date)
+                  
+                var ref = db.collection('users').doc(this.state.user.email).collection('products').doc(docID)
+                ref.update({
+                  currentProductPrice: currentPrice,
+                  priceHistory: priceHistory,
+                  dateRecorded: dateRecorded
+                })
+                setTimeout(this.updateList, 3000)
+              } 
             }
           })
         }, 5000);
       })
-    } else {
-      console.log('error')
-    }
+    } 
   }
 
   priceMet() {
-    if(Array.isArray(this.state.users) || !this.state.users === null) {
-      this.state.users.forEach(item => {
+    if(Array.isArray(this.state.items) || !this.state.items === null) {
+      this.state.items.forEach(item => {
         const currentProductPrice = parseInt(item.currentProductPrice.slice(5, item.currentProductPrice.length), 10)
         const desiredPrice = parseInt(item.desired_price, 10)
 
@@ -219,7 +237,7 @@ class App extends Component {
             message: `The price of ${item.productTitle.slice(0, 40)} is below your desired price and is now in your price range! Go check it out at ${item.url}`,
           }, "user_y8NpFi4fIZIH8djmytjIA");
 
-          var ref = db.collection('users').doc(this.state.uid).collection('products').doc(item.docID)
+          var ref = db.collection('users').doc(this.state.user.email).collection('products').doc(item.productTitle)
           ref.delete()
           
           this.setState({
@@ -231,17 +249,19 @@ class App extends Component {
           console.log(`PRICE OF ${item.productTitle} IS HIGHER`)
         }
       })
-    } else {
-      console.log('error')
     }
   }
   
   render() {
-    if(this.state.loading) {
+    if(!this.state.user) {
       return (
-        <div class="spinner">
-          <Spinner color="#3333ff" />
-        </div>
+      <div class="app-menu">
+        <img src="https://i.ibb.co/FJWyWBb/icon48.png" />
+        <h1>Price Tracker</h1>
+        <p><a onClick={this.showLogin}>Log In</a> | <a onClick={this.showSignUp}>Sign Up</a></p>
+        <Login show={this.state.showLogin} onClose={this.showLogin} /> 
+        <SignUp show={this.state.showSignUp} onClose={this.showSignUp} />
+      </div>
       )
     }
 
@@ -250,20 +270,30 @@ class App extends Component {
         <header class="App-header">
           <div class="product-list">
             {
-              this.state.users && 
-              this.state.users.map(user => {
+              this.state.loading &&
+              <div class="spinner">
+                <Spinner color="#3333ff" />
+              </div>
+            }
+            {
+              this.state.user.photoURL ? 
+                <img class="user-gmail-icon" src={this.state.user.photoURL} onClick={this.showUserProfile}/> : 
+                <div class="basic-icon" onClick={this.showUserProfile}>{this.state.user.email.charAt(0).toUpperCase()}</div>
+            }
+            {
+              this.state.items && 
+              this.state.items.map(item => {
                 return(
-                  <ProductList list={user} />
+                  <ProductList list={item} update={this.updateList} />
                 )
               })
             }
           </div>
-            <div class="add-product-div">
-              <div style={{paddingTop: '2px'}}>
-                <button onClick={this.showAddProduct} class="add-product">Add Product</button>
-              </div>
-            </div>
+          <div>
+            <PlusCircleFilled title="Add Product" onClick={this.showAddProduct} style={{outline: 'none', color: '#0a1d70', position: 'fixed', bottom: '7px', right: '10px', fontSize: '50px'}}/>
+          </div>
             <AddProduct url={this.getUrl} desiredPrice={this.getDesiredPrice} handler={this.handler} show={this.state.showAddProduct} onClose={this.showAddProduct} />
+            <UserProfile user={this.state.user} show={this.state.showUserProfile} onClose={this.showUserProfile} signOut={this.signOut} />
         </header>
       </div>
     );
