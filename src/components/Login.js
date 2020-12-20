@@ -40,7 +40,7 @@ export default class Login extends Component {
 
     loginGoogle() {
         const provider = new firebase.auth.GoogleAuthProvider();
-        firebase.auth().signInWithRedirect(provider)
+        firebase.auth().signInWithPopup(provider)
             .catch((error) => {
                 this.setState({
                     error: error.message

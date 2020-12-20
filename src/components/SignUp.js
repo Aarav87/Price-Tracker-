@@ -46,10 +46,6 @@ export default class SignUp extends Component {
                     error: error.message
                 })
             })
-
-        firebase.auth().getRedirectResult().then(function(result) {
-            console.log(result)
-        })
     }
 
     render() {

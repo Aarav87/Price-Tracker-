@@ -6,7 +6,7 @@ import Frame, { FrameContextConsumer }from 'react-frame-component';
 import App from "./App";
 import request from 'request';
 import cheerio from 'cheerio';
-import {db, auth, arrayUpdate} from './firebase';
+import firebase from 'firebase/app';
 
 class Main extends React.Component {
   render() {  
@@ -49,5 +49,3 @@ function toggle(){
    }
 }
 
-const bgPage = chrome.extension.getBackgroundPage();
-bgPage.signInWithPopup();

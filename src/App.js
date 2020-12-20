@@ -31,6 +31,7 @@ class App extends Component {
       desired_price: 0,
       currentProductPrice: 0,
       imageUrl: '',
+      youSave: '',
       loading: true,
       user: null
     }
@@ -132,6 +133,7 @@ class App extends Component {
         const productTitle = $('#titleSection').text().replace(/\s\s+/g, '')
         var currentPrice = $('#priceblock_ourprice').text().replace(/\s\s+/g, '')
         const imageUrl = $('#landingImage').attr("data-old-hires")
+        const youSave = $('#regularprice_savings').text().replace(/\s\s+/g, '')
 
         if(currentPrice === "") {
           currentPrice = $('#priceblock_dealprice').text().replace(/\s\s+/g, '')
@@ -140,7 +142,8 @@ class App extends Component {
         this.setState({
           productTitle: productTitle.replace('/', ' '),
           currentProductPrice: currentPrice,
-          imageUrl: imageUrl
+          imageUrl: imageUrl,
+          youSave: youSave
         })
       }
     })
@@ -155,7 +158,8 @@ class App extends Component {
       desired_price: this.state.desired_price,
       imageUrl: this.state.imageUrl,
       priceHistory: [],
-      dateRecorded: []
+      dateRecorded: [],
+      youSave: this.state.youSave
     })    
   }
   
@@ -255,13 +259,21 @@ class App extends Component {
   render() {
     if(!this.state.user) {
       return (
-      <div class="app-menu">
-        <img src="https://i.ibb.co/FJWyWBb/icon48.png" />
-        <h1>Price Tracker</h1>
-        <p><a onClick={this.showLogin}>Log In</a> | <a onClick={this.showSignUp}>Sign Up</a></p>
-        <Login show={this.state.showLogin} onClose={this.showLogin} /> 
-        <SignUp show={this.state.showSignUp} onClose={this.showSignUp} />
-      </div>
+        <div class="app-menu">
+          <img src="https://i.ibb.co/FJWyWBb/icon48.png" />
+          <h1>Price Tracker</h1>
+          <p><a onClick={this.showLogin}>Log In</a> | <a onClick={this.showSignUp}>Sign Up</a></p>
+          <Login show={this.state.showLogin} onClose={this.showLogin} /> 
+          <SignUp show={this.state.showSignUp} onClose={this.showSignUp} />
+        </div>
+      )
+    }
+
+    if(this.state.loading) {
+      return (
+        <div class="spinner">
+          <Spinner color="#3333ff" />
+        </div>
       )
     }
 
@@ -269,12 +281,6 @@ class App extends Component {
       <div class="App">
         <header class="App-header">
           <div class="product-list">
-            {
-              this.state.loading &&
-              <div class="spinner">
-                <Spinner color="#3333ff" />
-              </div>
-            }
             {
               this.state.user.photoURL ? 
                 <img class="user-gmail-icon" src={this.state.user.photoURL} onClick={this.showUserProfile}/> : 
