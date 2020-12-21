@@ -12,8 +12,8 @@ import Login from './components/Login';
 import SignUp from './components/SignUp';
 import { Spinner } from 'react-activity';
 import 'react-activity/dist/react-activity.css';
-import emailjs from 'emailjs-com';
 import UserProfile from './components/UserProfile';
+import axios from 'axios';
 
 class App extends Component {
   constructor(props) {
@@ -234,12 +234,18 @@ class App extends Component {
 
         if(currentProductPrice < desiredPrice) {
           console.log(`PRICE OF ${item.productTitle} IS LOWER.`)
-          emailjs.send("gmail","template_lgncm65", {
-            to_name: "aarav332211@gmail.com",
-            from_name: "Price Tracker",
-            product_name: `${item.productTitle.slice(0, 40)}`,
-            message: `The price of ${item.productTitle.slice(0, 40)} is below your desired price and is now in your price range! Go check it out at ${item.url}`,
-          }, "user_y8NpFi4fIZIH8djmytjIA");
+
+          const email = this.state.user.email
+          const productTitle = item.productTitle
+          const url = item.url
+
+          const data = {
+            email, 
+            productTitle, 
+            url
+          }
+         
+          axios.post('http://localhost:3001/sendMail', data)
 
           var ref = db.collection('users').doc(this.state.user.email).collection('products').doc(item.productTitle)
           ref.delete()
