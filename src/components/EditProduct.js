@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import {db, auth, arrayUpdate} from '../firebase';
 import { CloseOutlined } from '@ant-design/icons/'
 import { Line } from 'react-chartjs-2';
+import firebase from 'firebase/app';
 
 export default class EditProduct extends Component {
     constructor(props) {
@@ -16,10 +17,21 @@ export default class EditProduct extends Component {
 
         this.onChange = this.onChange.bind(this)
         this.desiredPrice = this.desiredPrice.bind(this)
+        this.saveChanges = this.saveChanges.bind(this)
     }
 
     onClose(e) {
         this.props.onClose && this.props.onClose(e)
+    }
+
+    saveChanges() {
+        const email = firebase.auth().currentUser.email;
+        const productTitle = this.state.list.productTitle.replace('/', ' ')
+        
+        var ref = db.collection('users').doc(email).collection('products').doc(productTitle)
+        ref.update({
+            desired_price: this.state.desired_price
+        }) 
     }
 
     onChange(e) {
@@ -95,7 +107,8 @@ export default class EditProduct extends Component {
                     </button>
                    
                     <button 
-                        style={{position: 'fixed', bottom: '10px', right: '20px', width: '45%', border: '1px solid rgb(206, 212, 218)', borderRadius: '5px', fontFamily: 'Verdana, Geneva, sans-serif', backgroundColor: '#0a1d70', height: '40px', color: '#FFFFFF'}} 
+                        style={{position: 'fixed', bottom: '10px', right: '20px', width: '45%', border: '1px solid rgb(206, 212, 218)', borderRadius: '5px', fontFamily: 'Verdana, Geneva, sans-serif', backgroundColor: '#0a1d70', height: '40px', color: '#FFFFFF'}}
+                        onClick={() => this.saveChanges()}
                     >Save Changes
                     </button>
                 </div>
