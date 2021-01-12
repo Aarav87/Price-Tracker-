@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { CloseOutlined } from '@ant-design/icons/'
-import {db, auth, arrayUpdate} from '../firebase';
-import firebase from 'firebase/app';
+import axios from 'axios';
+import { auth } from '../firebase';
 
 export default class Login extends Component {
     constructor(props) {
@@ -15,7 +15,6 @@ export default class Login extends Component {
 
         this.onChange = this.onChange.bind(this)
         this.loginEmailPassword = this.loginEmailPassword.bind(this)
-        this.loginGoogle = this.loginGoogle.bind(this)
 
     }
 
@@ -31,21 +30,18 @@ export default class Login extends Component {
 
     loginEmailPassword() {
         auth.signInWithEmailAndPassword(this.state.email, this.state.password)
-            .catch((error) => {
-                this.setState({
-                    error: error.message
-                })
-            })
-    }
+            .then(() => {
+                const data = {
+                    email: this.state.email
+                }
 
-    loginGoogle() {
-        const provider = new firebase.auth.GoogleAuthProvider();
-        firebase.auth().signInWithPopup(provider)
+                axios.post('http://localhost:3001/onLogin', data)
+            })
             .catch((error) => {
                 this.setState({
                     error: error.message
                 })
-            })
+            })    
     }
 
     render() {
@@ -69,6 +65,7 @@ export default class Login extends Component {
                         value={this.state.email} 
                         onChange={this.onChange}
                         placeholder="e.g pricetracker@gmail.com"
+                        required="true"
                     />
                 </div>
                 <div>
@@ -79,6 +76,7 @@ export default class Login extends Component {
                             style={{position: 'fixed', top: '155px', left: '130px', width: '200px'}} 
                             value={this.state.password} 
                             onChange={this.onChange}
+                            required="true"
                         />
                 </div>
                 <div style={{height: '70px', position: 'fixed', top: '200px', left: '40px', width: '80%', textAlign: 'center'}}>
@@ -92,7 +90,6 @@ export default class Login extends Component {
                     <p>or</p>
                     <button 
                         style={{width: '100%', backgroundColor: '#0a1d70', color: '#fff', height: '30px', borderRadius: '5px', border: 'none'}} 
-                        onClick={this.loginGoogle}
                     >Login With Google
                     </button>
                     <p style={{fontSize: '10px'}}>Don't have an account? <a style={{color: '#3e7aa8'}}>Sign up here</a></p>

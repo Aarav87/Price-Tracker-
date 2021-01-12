@@ -27,10 +27,10 @@ class UserProfile extends Component {
                     this.state.user.photoURL ? 
                         <img 
                             src={this.state.user.photoURL} 
-                            style={{position: 'fixed', top: '10px', right: '100px', height: '150px', width: '150px', borderRadius: '50%', color: '#FFF', fontFamily: 'Verdana, Geneva, sans-serif', display: 'inline-block'}} 
+                            style={{position: 'fixed', top: '10px', right: '100px', height: '150px', width: '150px', borderRadius: '50%', color: '#FFF', display: 'inline-block'}} 
                         /> : 
                         <div 
-                            style={{position: 'fixed', top: '10px', right: '100px', height: '150px', width: '150px', borderRadius: '50%', backgroundColor: '#808080', color: '#FFF', fontFamily: 'Verdana, Geneva, sans-serif', display: 'inline-block', textAlign: 'center', lineHeight: '150px', fontSize: '120px'}}
+                            style={{position: 'fixed', top: '10px', right: '100px', height: '150px', width: '150px', borderRadius: '50%', backgroundColor: '#808080', color: '#FFF', display: 'inline-block', textAlign: 'center', lineHeight: '150px', fontSize: '120px'}}
                         >
                             {this.state.user.email.charAt(0).toUpperCase()}
                         </div>

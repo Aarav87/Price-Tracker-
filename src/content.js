@@ -4,9 +4,6 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import Frame, { FrameContextConsumer }from 'react-frame-component';
 import App from "./App";
-import request from 'request';
-import cheerio from 'cheerio';
-import firebase from 'firebase/app';
 
 class Main extends React.Component {
   render() {  

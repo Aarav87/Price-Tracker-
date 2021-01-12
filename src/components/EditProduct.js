@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
-import {db, auth, arrayUpdate} from '../firebase';
-import { CloseOutlined } from '@ant-design/icons/'
 import { Line } from 'react-chartjs-2';
-import firebase from 'firebase/app';
+import axios from 'axios';
 
 export default class EditProduct extends Component {
     constructor(props) {
@@ -25,13 +23,15 @@ export default class EditProduct extends Component {
     }
 
     saveChanges() {
-        const email = firebase.auth().currentUser.email;
         const productTitle = this.state.list.productTitle.replace('/', ' ')
+        const desired_price = this.state.desired_price
         
-        var ref = db.collection('users').doc(email).collection('products').doc(productTitle)
-        ref.update({
-            desired_price: this.state.desired_price
-        }) 
+        const data = {
+            productTitle: productTitle,
+            desired_price: desired_price
+        }
+
+        axios.post('http://localhost:3001/saveChanges', data)
     }
 
     onChange(e) {
@@ -79,18 +79,18 @@ export default class EditProduct extends Component {
         }   
 
         return(
-            <div style={{position: 'fixed', top: 0, bottom: 0, left: 0, right: 0, backgroundColor: '#fff', width: '100%', height: 800}}>
+            <div style={{position: 'fixed', top: 0, bottom: 0, left: 0, right: 0, backgroundColor: '#fff', width: '100%', height: 800, fontFamily: 'Verdana, Geneva, sans-serif'}}>
                 <div style={{paddingTop: '3px'}}>
                     <img style={{height: '75px', width: '125px', padding: '10px', float: 'left'}} src={this.state.list.imageUrl} />
-                    <h1 style={{fontFamily: 'Verdana, Geneva, sans-serif', fontSize: '15px', paddingTop: '7px', paddingLeft: '150px', textDecoration: 'none'}}>{this.state.list.productTitle.slice(0, 37)}...</h1>
-                    <p style={{paddingLeft: '150px', fontFamily: 'Verdana, Geneva, sans-serif'}}>Current Price: {this.state.list.currentProductPrice.replace(/\s+/g, '')}</p>
-                    <p style={{position: 'fixed', top: '75px', right: '50px', fontFamily: 'Verdana, Geneva, sans-serif'}}>Desired Price: CDN${this.state.desired_price}</p>
+                    <h1 style={{fontSize: '15px', paddingTop: '7px', paddingLeft: '150px', textDecoration: 'none'}}>{this.state.list.productTitle.slice(0, 37)}...</h1>
+                    <p style={{paddingLeft: '150px'}}>Current Price: {this.state.list.currentProductPrice.replace(/\s+/g, '')}</p>
+                    <p style={{position: 'fixed', top: '75px', paddingLeft: '150px', paddingTop: '10px'}}>Desired Price: CDN${this.state.desired_price}</p>
                     <hr style={{border: 'none', borderBottom: '1px solid #000000', width: '90%', paddingTop: '15px'}} /> 
                 </div>
-                <div style={{backgroundColor: '#fff', paddingLeft: '150px', fontFamily: 'Verdana, Geneva, sans-serif', height: '100px'}}>
-                    <p style={{position: 'fixed', left: '30px', top: '120px', fontFamily: 'Verdana, Geneva, sans-serif'}}>Product URL</p>
+                <div style={{backgroundColor: '#fff', paddingLeft: '150px', height: '100px'}}>
+                    <p style={{position: 'fixed', left: '30px', top: '120px'}}>Product URL</p>
                     <input style={{width: '200px'}} type="text" name="url" value={this.state.list.url} readonly="true" /> 
-                    <p style={{position: 'fixed', left: '30px', top: '140px', fontFamily: 'Verdana, Geneva, sans-serif'}}>Desired Price</p>
+                    <p style={{position: 'fixed', left: '30px', top: '140px'}}>Desired Price</p>
                     <input style={{width: '200px'}} type="number" name="desired_price" maxlength={this.state.list.desired_price.slice(5, this.state.list.desired_price.length).length} value={this.state.desired_price} onChange={this.onChange} />
                 </div>
                 <div style={{width: '93%', position: 'fixed', left: '25px', top: '190px'}}>
@@ -101,13 +101,13 @@ export default class EditProduct extends Component {
                 </div>
                 <div style={{backgroundColor: '#FFFFFF', height: '70px', position: 'fixed', bottom: '0px', left: '20px', width: '96%'}}>
                     <button 
-                        style={{position: 'fixed', bottom: '10px', left: '15px', width: '45%', border: '1px solid rgb(206, 212, 218)', borderRadius: '5px', fontFamily: 'Verdana, Geneva, sans-serif', backgroundColor: '#FFFFFF', height: '40px'}} 
+                        style={{position: 'fixed', bottom: '10px', left: '15px', width: '45%', border: '1px solid rgb(206, 212, 218)', borderRadius: '5px', backgroundColor: '#FFFFFF', height: '40px'}} 
                         onClick={e => this.onClose(e)}
                     >Close
                     </button>
                    
                     <button 
-                        style={{position: 'fixed', bottom: '10px', right: '20px', width: '45%', border: '1px solid rgb(206, 212, 218)', borderRadius: '5px', fontFamily: 'Verdana, Geneva, sans-serif', backgroundColor: '#0a1d70', height: '40px', color: '#FFFFFF'}}
+                        style={{position: 'fixed', bottom: '10px', right: '20px', width: '45%', border: '1px solid rgb(206, 212, 218)', borderRadius: '5px', backgroundColor: '#0a1d70', height: '40px', color: '#FFFFFF'}}
                         onClick={() => this.saveChanges()}
                     >Save Changes
                     </button>

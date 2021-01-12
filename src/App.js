@@ -1,11 +1,6 @@
 import React, { Component } from 'react';
 import './App.css';
-import logo from './logo.png';
-import request from 'request';
-import cheerio from 'cheerio';
-import { InputNumber, Button, Tooltip } from 'antd';
 import AddProduct from './components/AddProduct';
-import {db, auth, arrayUpdate} from './firebase';
 import ProductList from './components/ProductList';
 import { PlusCircleFilled } from '@ant-design/icons/';
 import Login from './components/Login';
@@ -14,6 +9,7 @@ import { Spinner } from 'react-activity';
 import 'react-activity/dist/react-activity.css';
 import UserProfile from './components/UserProfile';
 import axios from 'axios';
+import { auth } from './firebase';
 
 class App extends Component {
   constructor(props) {
@@ -44,8 +40,6 @@ class App extends Component {
     this.getDesiredPrice = this.getDesiredPrice.bind(this)
     this.handler = this.handler.bind(this)
     this.updateList = this.updateList.bind(this)
-    this.checkPrice = this.checkPrice.bind(this)
-    this.priceMet = this.priceMet.bind(this)
     this.getProductDetails = this.getProductDetails.bind(this)
     this.addProduct = this.addProduct.bind(this)
   }
@@ -54,36 +48,26 @@ class App extends Component {
     auth.onAuthStateChanged((user) => {      
       if (user) {
         this.setState({ user })
-
-        this.showLogin()
         setTimeout(this.updateList, 4000)
-        setTimeout(this.checkPrice, 8000)
-        setTimeout(this.priceMet, 12000)
-
       } else {
         this.setState({
           user: null,
           loading: false
         })
-
-      }    
-    });
+      }
+    })
   }
 
   updateList() {
-    db.collection(`/users/${this.state.user.email}/products`)
-      .get()
-      .then(snapshot => {
-        const items = [];
-        snapshot.forEach(document => {
-          const data = document.data();
-          items.push(data);
-          this.setState({
-            items: items,
-            loading: false
-          });
+    axios.post('http://localhost:3001/updateList')
+      .then((response) => {
+        this.setState({
+          items: response.data,
+          loading: false
         });
-      })
+      }, (error) => {
+        console.log(error);
+      });
   }
 
   showAddProduct() {
@@ -116,51 +100,46 @@ class App extends Component {
 
   signOut() {
     auth.signOut()
-  }
-
-  getProductDetails() {
-    var options = {
-      url: this.state.url,
-      headers: {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.121 Safari/537.36'
-      }
-    };
-
-    request(options, (error, response, html) => {
-      if (!error) {
-        // Use Cheerio to load the page.
-        var $ = cheerio.load(html);
-        const productTitle = $('#titleSection').text().replace(/\s\s+/g, '')
-        var currentPrice = $('#priceblock_ourprice').text().replace(/\s\s+/g, '')
-        const imageUrl = $('#landingImage').attr("data-old-hires")
-        const youSave = $('#regularprice_savings').text().replace(/\s\s+/g, '')
-
-        if(currentPrice === "") {
-          currentPrice = $('#priceblock_dealprice').text().replace(/\s\s+/g, '')
+      .then(() => {
+        const data = {
+            email: null
         }
 
-        this.setState({
-          productTitle: productTitle.replace('/', ' '),
-          currentProductPrice: currentPrice,
-          imageUrl: imageUrl,
-          youSave: youSave
-        })
-      }
+        axios.post('http://localhost:3001/onLogin', data)
     })
   }
 
+  getProductDetails() {
+    const data = {
+      url: this.state.url
+    }
+
+    axios.post('http://localhost:3001/getProductDetails', data)
+      .then((response) => {
+        this.setState({
+          productTitle: response.data.productTitle.replace('/', ' '),
+          currentProductPrice: response.data.currentPrice,
+          imageUrl: response.data.imageUrl,
+          youSave: response.data.youSave
+        });
+      }, (error) => {
+        console.log(error);
+      });
+  }
+
   addProduct() {
-    var ref = db.collection('users').doc(this.state.user.email).collection('products').doc(this.state.productTitle)
-    ref.set({ 
+    const data = {
       url: this.state.url,
       productTitle: this.state.productTitle,
       currentProductPrice: this.state.currentProductPrice,
       desired_price: this.state.desired_price,
       imageUrl: this.state.imageUrl,
-      priceHistory: [],
+      priceHistory: [], 
       dateRecorded: [],
       youSave: this.state.youSave
-    })    
+    }
+
+    axios.post('http://localhost:3001/addProduct', data)
   }
   
   handler() {
@@ -172,94 +151,6 @@ class App extends Component {
     setTimeout(this.addProduct, 6000)
     setTimeout(this.updateList, 9000)
 
-  }
-  
-  checkPrice() {
-    if(Array.isArray(this.state.items) || !this.state.items === null) {
-      this.state.items.forEach(item => {
-        const url = item.url
-
-        setInterval(() => {
-          var options = {
-            url: url,
-            headers: {
-              'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.121 Safari/537.36'
-            }
-          }
-          
-          request(options, (error, response, html) => {
-            if (!error) {
-              // Use Cheerio to load the page.
-              var $ = cheerio.load(html);
-              var currentPrice = $('#priceblock_ourprice').text().replace(/\s\s+/g, '')
-              const docID = item.productTitle
-
-              if(currentPrice === "") {
-                currentPrice = $('#priceblock_dealprice').text().replace(/\s\s+/g, '')
-              }
-
-              const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
-              const today = new Date();
-              const dd = String(today.getDate())
-              const mm = String(today.getMonth())
-              const date = `${months[mm]} ${dd}`
-
-              const priceHistory = item.priceHistory
-              const dateRecorded = item.dateRecorded  
-
-              if(dateRecorded[dateRecorded.length - 1] != date) {
-                priceHistory.push(currentPrice)
-                dateRecorded.push(date)
-                  
-                var ref = db.collection('users').doc(this.state.user.email).collection('products').doc(docID)
-                ref.update({
-                  currentProductPrice: currentPrice,
-                  priceHistory: priceHistory,
-                  dateRecorded: dateRecorded
-                })
-                setTimeout(this.updateList, 3000)
-              } 
-            }
-          })
-        }, 5000);
-      })
-    } 
-  }
-
-  priceMet() {
-    if(Array.isArray(this.state.items) || !this.state.items === null) {
-      this.state.items.forEach(item => {
-        const currentProductPrice = parseInt(item.currentProductPrice.slice(5, item.currentProductPrice.length), 10)
-        const desiredPrice = parseInt(item.desired_price, 10)
-
-        if(currentProductPrice < desiredPrice) {
-          console.log(`PRICE OF ${item.productTitle} IS LOWER.`)
-
-          const email = this.state.user.email
-          const productTitle = item.productTitle
-          const url = item.url
-
-          const data = {
-            email, 
-            productTitle, 
-            url
-          }
-         
-          axios.post('http://localhost:3001/sendMail', data)
-
-          var ref = db.collection('users').doc(this.state.user.email).collection('products').doc(item.productTitle)
-          ref.delete()
-          
-          this.setState({
-            loading: true
-          })
-
-          setTimeout(this.updateList, 3000)
-        } else {
-          console.log(`PRICE OF ${item.productTitle} IS HIGHER`)
-        }
-      })
-    }
   }
   
   render() {

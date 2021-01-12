@@ -54,6 +54,7 @@ export default class AddProduct extends Component {
                         style={{position: 'fixed', top: '125px', left: '150px', width: '200px'}} 
                         value={this.state.url} 
                         onChange={this.onChange}
+                        required="true"
                     />
                 </div>
                 <div>
@@ -63,17 +64,18 @@ export default class AddProduct extends Component {
                             style={{position: 'fixed', top: '155px', left: '150px', width: '200px'}} 
                             value={this.state.desired_price} 
                             onChange={this.onChange}
+                            required="true"
                         />
                 </div>
                 <div style={{backgroundColor: '#FFFFFF', height: '70px', position: 'fixed', bottom: '0px', left: '20px', width: '96%'}}>
                     <button 
-                        style={{position: 'fixed', bottom: '10px', left: '15px', width: '45%', border: '1px solid rgb(206, 212, 218)', borderRadius: '5px', fontFamily: 'Verdana, Geneva, sans-serif', backgroundColor: '#FFFFFF', height: '40px'}} 
+                        style={{position: 'fixed', bottom: '10px', left: '15px', width: '45%', border: '1px solid rgb(206, 212, 218)', borderRadius: '5px', backgroundColor: '#FFFFFF', height: '40px'}} 
                         onClick={e => this.onClose(e)}
                     >Close
                     </button>
                    
                     <button 
-                        style={{position: 'fixed', bottom: '10px', right: '20px', width: '45%', border: '1px solid rgb(206, 212, 218)', borderRadius: '5px', fontFamily: 'Verdana, Geneva, sans-serif', backgroundColor: '#0a1d70', height: '40px', color: '#FFFFFF'}} 
+                        style={{position: 'fixed', bottom: '10px', right: '20px', width: '45%', border: '1px solid rgb(206, 212, 218)', borderRadius: '5px', backgroundColor: '#0a1d70', height: '40px', color: '#FFFFFF'}} 
                         onClick={e => {this.url(); this.desiredPrice(); setTimeout(this.handler(e), 3000)}}
                     >Add Product
                     </button>

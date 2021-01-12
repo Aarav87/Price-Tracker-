@@ -23,4 +23,5 @@ yarn-error.log*
 
 ./package-lock.json
 
-src/server.js
+/.env
+/ServiceAccountKey.json

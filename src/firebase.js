@@ -3,18 +3,17 @@ import 'firebase/firestore'
 import 'firebase/auth'
 
 const firebaseConfig = {
-    apiKey: "AIzaSyAU1z0lCuA90fUa29kdsRrGXLjSBwdHpPI",
-    authDomain: "price-tra-3c4a9.firebaseapp.com",
-    databaseURL: "https://price-tra-3c4a9.firebaseio.com",
-    projectId: "price-tra-3c4a9",
-    storageBucket: "price-tra-3c4a9.appspot.com",
-    messagingSenderId: "797455678710",
-    appId: "1:797455678710:web:fa84d5420738a920bf80d7"
+    apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
+    authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
+    databaseURL: process.env.REACT_APP_FIREBASE_DATABASE_URL,
+    projectId: process.env.REACT_APP_FIREBASE_PROJECT_ID,
+    storageBucket: process.env.REACT_APP_FIREBASE_STORAGE_BUCKET,
+    messagingSenderId: process.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID,
+    appId: process.env.REACT_APP_FIREBASE_APP_ID
 }
 
 firebase.initializeApp(firebaseConfig)
 
 export const auth = firebase.auth()
-export const db = firebase.firestore()
 export const arrayUpdate = firebase.firestore.FieldValue
 export default firebase

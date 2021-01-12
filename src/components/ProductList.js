@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons/';
-import {db, auth, arrayUpdate} from '../firebase';
 import EditProduct from './EditProduct'
-import firebase from 'firebase/app';
+import axios from 'axios';
 
 export default class ProductList extends Component {
     constructor(props) {
@@ -31,11 +30,13 @@ export default class ProductList extends Component {
     }
 
     deleteProduct() {
-        const email = firebase.auth().currentUser.email;
         const productTitle = this.state.list.productTitle.replace('/', ' ')
-        
-        var ref = db.collection('users').doc(email).collection('products').doc(productTitle)
-        ref.delete() 
+
+        const data = {
+            productTitle
+        }
+
+        axios.post('http://localhost:3001/deleteProduct', data)
         
         this.update()
     }
@@ -65,7 +66,7 @@ export default class ProductList extends Component {
                 {
                     this.state.showDeleteProduct &&
                         <div style={{position: 'absolute', top: 0, left: 0, width: '100%', height: 800, background: 'rgba(0, 0, 0, 0.5)'}}>
-                            <div style={{position: 'fixed', top: '100px', left: '50px', backgroundColor: '#fff', width: '300px', height: '100px', fontFamily: 'Verdana, Geneva, sans-serif', border: '1px solid rgb(206, 212, 218)', borderRadius: '5px'}}>
+                            <div style={{position: 'fixed', top: '100px', left: '50px', backgroundColor: '#fff', width: '300px', height: '100px', border: '1px solid rgb(206, 212, 218)', borderRadius: '5px'}}>
                                 <p style={{fontSize: '13px', paddingLeft: '5px'}}>Are you sure you want to stop tracking this product</p>
                                 <button 
                                     style={{width: '45%', border: '1px solid rgb(206, 212, 218)', borderRadius: '5px', backgroundColor: '#FFFFFF', height: '30px'}} 
