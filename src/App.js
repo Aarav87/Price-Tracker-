@@ -20,6 +20,7 @@ class App extends Component {
       showUserProfile: true,
       showSignUp: true,
       showLogin: true,
+      showEditProduct: true,
       items: null, 
       users: null,
       url: "",
@@ -36,6 +37,7 @@ class App extends Component {
     this.showUserProfile = this.showUserProfile.bind(this)
     this.showLogin = this.showLogin.bind(this)
     this.showSignUp = this.showSignUp.bind(this)
+    this.showEditProduct = this.showEditProduct.bind(this)
     this.getUrl = this.getUrl.bind(this)
     this.getDesiredPrice = this.getDesiredPrice.bind(this)
     this.handler = this.handler.bind(this)
@@ -84,6 +86,10 @@ class App extends Component {
 
   showSignUp() {
     this.setState({showSignUp: !this.state.showSignUp})
+  }
+
+  showEditProduct() {
+    this.setState({showEditProduct: !this.state.showEditProduct})
   }
 
   getUrl(value) {
@@ -187,13 +193,16 @@ class App extends Component {
               this.state.items && 
               this.state.items.map(item => {
                 return(
-                  <ProductList list={item} update={this.updateList} />
+                  <ProductList list={item} update={this.updateList} editProduct={this.showEditProduct} />
                 )
               })
             }
           </div>
           <div>
-            <PlusCircleFilled title="Add Product" onClick={this.showAddProduct} style={{outline: 'none', color: '#0a1d70', position: 'fixed', bottom: '7px', right: '10px', fontSize: '50px'}}/>
+            {
+              this.state.showEditProduct &&
+                <PlusCircleFilled title="Add Product" onClick={this.showAddProduct} style={{outline: 'none', color: '#0a1d70', position: 'fixed', bottom: '7px', right: '10px', fontSize: '50px'}}/>
+            }
           </div>
             <AddProduct url={this.getUrl} desiredPrice={this.getDesiredPrice} handler={this.handler} show={this.state.showAddProduct} onClose={this.showAddProduct} />
             <UserProfile user={this.state.user} show={this.state.showUserProfile} onClose={this.showUserProfile} signOut={this.signOut} />

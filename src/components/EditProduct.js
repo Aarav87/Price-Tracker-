@@ -84,7 +84,7 @@ export default class EditProduct extends Component {
                     <img style={{height: '75px', width: '125px', padding: '10px', float: 'left'}} src={this.state.list.imageUrl} />
                     <h1 style={{fontSize: '15px', paddingTop: '7px', paddingLeft: '150px', textDecoration: 'none'}}>{this.state.list.productTitle.slice(0, 37)}...</h1>
                     <p style={{paddingLeft: '150px'}}>Current Price: {this.state.list.currentProductPrice.replace(/\s+/g, '')}</p>
-                    <p style={{position: 'fixed', top: '75px', paddingLeft: '150px', paddingTop: '10px'}}>Desired Price: CDN${this.state.desired_price}</p>
+                    <p style={{position: 'fixed', top: '75px', paddingLeft: '150px'}}>Desired Price: CDN${this.state.desired_price}</p>
                     <hr style={{border: 'none', borderBottom: '1px solid #000000', width: '90%', paddingTop: '15px'}} /> 
                 </div>
                 <div style={{backgroundColor: '#fff', paddingLeft: '150px', height: '100px'}}>

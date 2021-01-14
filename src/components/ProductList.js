@@ -21,6 +21,10 @@ export default class ProductList extends Component {
         this.props.update && this.props.update(e)
     }
 
+    editProduct(e) {
+        this.props.editProduct && this.props.editProduct(e)
+    }
+
     showEditProduct() {
         this.setState({showEditProduct: !this.state.showEditProduct})
     }
@@ -57,12 +61,12 @@ export default class ProductList extends Component {
                 </a>
                 <div style={{paddingTop: '1px', width: '382px', paddingBottom: '5px'}}>
                     <span>
-                        <EditOutlined title="Edit Product"  onClick={this.showEditProduct} style={{color: '#000000', paddingTop: '5px', paddingLeft: '10px', outline: 'none'}}/>
+                        <EditOutlined title="Edit Product"  onClick={e => {this.editProduct(e); this.showEditProduct()}} style={{color: '#000000', paddingTop: '5px', paddingLeft: '10px', outline: 'none'}}/>
                         <DeleteOutlined title="Delete Product" onClick={this.showDeleteProduct} style={{color: '#000000', paddingLeft: '10px', paddingRight: '98px', outline: 'none'}}/>
                         <input style={{width: '200px'}} type="number" min="0" value={this.state.list.desired_price} placeholder="Desired Price" readonly="true"/> 
                     </span>
                 </div>
-                <EditProduct show={this.state.showEditProduct} onClose={this.showEditProduct} list={this.state.list} />
+                <EditProduct show={this.state.showEditProduct} onClose={e => {this.editProduct(e); this.showEditProduct()}} list={this.state.list} />
                 {
                     this.state.showDeleteProduct &&
                         <div style={{position: 'absolute', top: 0, left: 0, width: '100%', height: 800, background: 'rgba(0, 0, 0, 0.5)'}}>
