@@ -1,3 +1,4 @@
+const PORT = process.env.PORT || 3000
 const express = require('express');
 const logger = require('morgan');
 const cors = require('cors');
@@ -258,6 +259,4 @@ function priceMet() {
 setInterval(checkPrice, 77760000)
 setInterval(priceMet, 86400000)
 
-app.listen(3001, () =>
-  console.log('Example app listening on port 3001!'),
-);
+app.listen(PORT);
