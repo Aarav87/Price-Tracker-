@@ -61,7 +61,7 @@ class App extends Component {
   }
 
   updateList() {
-    axios.post('http://localhost:3001/updateList')
+    axios.post(`${process.env.PORT}/updateList`)
       .then((response) => {
         this.setState({
           items: response.data,

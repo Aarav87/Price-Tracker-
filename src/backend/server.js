@@ -260,3 +260,5 @@ setInterval(checkPrice, 77760000)
 setInterval(priceMet, 86400000)
 
 app.listen(PORT);
+
+console.log(PORT)
