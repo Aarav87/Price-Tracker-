@@ -31,7 +31,7 @@ export default class EditProduct extends Component {
             desired_price: desired_price
         }
 
-        axios.post('http://localhost:3001/saveChanges', data)
+        axios.post(`${process.env.REACT_APP_BACKEND_URL}/saveChanges`, data)
     }
 
     onChange(e) {

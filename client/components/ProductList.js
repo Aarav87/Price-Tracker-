@@ -40,7 +40,7 @@ export default class ProductList extends Component {
             productTitle
         }
 
-        axios.post('http://localhost:3001/deleteProduct', data)
+        axios.post(`${process.env.REACT_APP_BACKEND_URL}/deleteProduct`, data)
         
         this.update()
     }

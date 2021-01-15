@@ -24,5 +24,4 @@ yarn-error.log*
 ./package-lock.json
 
 /.env
-/src/backend/ServiceAccountKey.json
-/src/backend/Procfile
+/backend/ServiceAccountKey.json

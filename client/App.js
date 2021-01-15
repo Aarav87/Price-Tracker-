@@ -111,7 +111,7 @@ class App extends Component {
             email: null
         }
 
-        axios.post('http://localhost:3001/onLogin', data)
+        axios.post(`${process.env.REACT_APP_BACKEND_URL}/onLogin`, data)
     })
   }
 
@@ -120,7 +120,7 @@ class App extends Component {
       url: this.state.url
     }
 
-    axios.post('http://localhost:3001/getProductDetails', data)
+    axios.post(`${process.env.REACT_APP_BACKEND_URL}/getProductDetails`, data)
       .then((response) => {
         this.setState({
           productTitle: response.data.productTitle.replace('/', ' '),
@@ -145,7 +145,7 @@ class App extends Component {
       youSave: this.state.youSave
     }
 
-    axios.post('http://localhost:3001/addProduct', data)
+    axios.post(`${process.env.REACT_APP_BACKEND_URL}/addProduct`, data)
   }
   
   handler() {

@@ -3,7 +3,7 @@ import { CloseOutlined } from '@ant-design/icons/'
 import axios from 'axios';
 import { auth } from '../firebase';
 
-export default class Login extends Component {
+export default class SignUp extends Component {
     constructor(props) {
         super(props);
 
@@ -14,7 +14,7 @@ export default class Login extends Component {
         }
 
         this.onChange = this.onChange.bind(this)
-        this.loginEmailPassword = this.loginEmailPassword.bind(this)
+        this.signUpEmailPassword = this.signUpEmailPassword.bind(this)
 
     }
 
@@ -28,20 +28,20 @@ export default class Login extends Component {
         })
     }
 
-    loginEmailPassword() {
-        auth.signInWithEmailAndPassword(this.state.email, this.state.password)
+    signUpEmailPassword() {
+        auth.createUserWithEmailAndPassword(this.state.email, this.state.password)
             .then(() => {
                 const data = {
                     email: this.state.email
                 }
 
-                axios.post('http://localhost:3001/onLogin', data)
+                axios.post(`${process.env.REACT_APP_BACKEND_URL}/onLogin`, data)
             })
             .catch((error) => {
                 this.setState({
                     error: error.message
                 })
-            })    
+            })
     }
 
     render() {
@@ -54,7 +54,7 @@ export default class Login extends Component {
                     <CloseOutlined onClick={e => this.onClose(e)}/>
                 </div>
                 <div style={{backgroundColor: '#fff', position: 'fixed', top: '40px', left: '155px'}}>
-                    <h1>Login</h1>
+                    <h1>Sign Up</h1>
                 </div>
                 <div>
                     <p style={{position: 'fixed', top: '110px', left: '75px'}}>Email</p>
@@ -82,15 +82,15 @@ export default class Login extends Component {
                 <div style={{height: '70px', position: 'fixed', top: '200px', left: '40px', width: '80%', textAlign: 'center'}}>
                     <button 
                         style={{width: '100%', backgroundColor: '#FF0000', color: '#fff', height: '30px', borderRadius: '5px', border: 'none'}} 
-                        onClick={this.loginEmailPassword}
-                    >Login
+                        onClick={this.signUpEmailPassword}
+                    >Sign Up
                     </button>
                 </div>
                 <div style={{height: '70px', position: 'fixed', top: '220px', left: '40px', width: '80%', textAlign: 'center'}} >
                     <p>or</p>
                     <button 
                         style={{width: '100%', backgroundColor: '#0a1d70', color: '#fff', height: '30px', borderRadius: '5px', border: 'none'}} 
-                    >Login With Google
+                    >Sign Up With Google
                     </button>
                     <p style={{fontSize: '10px'}}>Don't have an account? <a style={{color: '#3e7aa8'}}>Sign up here</a></p>
                     <p style={{fontSize: '10px', color: '#3e7aa8'}}>Forgot Password?</p>

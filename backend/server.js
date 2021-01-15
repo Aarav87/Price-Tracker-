@@ -6,7 +6,7 @@ const nodemailer = require('nodemailer')
 const cheerio = require('cheerio')
 const admin = require('firebase-admin')
 const axios = require('axios')
-const serviceAccount = require('../ServiceAccountKey')
+const serviceAccount = require('./ServiceAccountKey')
 require('dotenv').config()
 
 const app = express();
