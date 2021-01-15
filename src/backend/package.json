@@ -1,0 +1,16 @@
+{
+    "name": "heroku",
+    "version": "0.0.0",
+    "dependencies": {
+      "express": "^4.17.1",
+      "morgan": "^1.10.0",
+      "cors": "^2.8.5",
+      "nodemailer": "^6.4.17",
+      "cheerio": "^1.0.0-rc.3",
+      "firebase-admin": "^9.4.2",
+      "axios": "^0.21.0"
+    },
+    "scripts": {
+      "start": "node server.js"
+    }
+  }
