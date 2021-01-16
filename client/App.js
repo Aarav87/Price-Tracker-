@@ -52,16 +52,16 @@ class App extends Component {
         if (user) {
           this.setState({ user })
           setTimeout(this.updateList, 4000)
+
+          setTimeout(() => {
+            axios.post(`${process.env.REACT_APP_BACKEND_URL}/onStateChanged`, this.state.user)
+          }, 3000)
         } else {
           this.setState({
             user: null,
             loading: false
           })
         }
-
-        setTimeout(() => {
-          axios.post(`${process.env.REACT_APP_BACKEND_URL}/onStateChanged`, this.state.user)
-        }, 3000)
       })
   }
 
