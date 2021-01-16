@@ -1,5 +1,5 @@
 /*global chrome*/
-/* src/content.js */
+/* client/content.js */
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Frame, { FrameContextConsumer }from 'react-frame-component';
