@@ -12,7 +12,7 @@ const app = express();
 //use cors to allow cross origin resource sharing
 app.use(
   cors({
-    origin: 'https://www.amazon.ca/*',
+    origin: 'https://www.amazon.ca',
     credentials: true,
   })
 );
