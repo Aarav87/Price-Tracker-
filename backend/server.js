@@ -12,7 +12,7 @@ const app = express();
 //use cors to allow cross origin resource sharing
 app.use(
   cors({
-    origin: 'https://www.amazon.ca',
+    origin: 'https://www.amazon.ca/*',
     credentials: true,
   })
 );
@@ -52,9 +52,22 @@ let transporter = nodemailer.createTransport({
     }
 });
 
-app.post('/onStateChanged', function(req, res) {
+app.post('/onLogin', function(req, res) {
     const email = req.body.email
-}
+
+    if(email) {
+        admin
+            .auth()
+            .getUserByEmail(email)
+            .then((userRecord) => {
+                user = userRecord
+            })
+    } else {
+        user = null
+    }
+
+    console.log(user)
+})
 
 app.post('/updateList', function(req, res) {
     db.collection(`/users/${user.email}/products`)

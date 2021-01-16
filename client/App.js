@@ -47,22 +47,17 @@ class App extends Component {
   }
   
   componentDidMount() {
-    if(window.location.href === "https://www.amazon.ca/")
-      auth.onAuthStateChanged((user) => {      
-        if (user) {
-          this.setState({ user })
-          setTimeout(this.updateList, 4000)
-
-          setTimeout(() => {
-            axios.post(`${process.env.REACT_APP_BACKEND_URL}/onStateChanged`, this.state.user)
-          }, 3000)
-        } else {
-          this.setState({
-            user: null,
-            loading: false
-          })
-        }
-      })
+    auth.onAuthStateChanged((user) => {      
+      if (user) {
+        this.setState({ user })
+        setTimeout(this.updateList, 4000)
+      } else {
+        this.setState({
+          user: null,
+          loading: false
+        })
+      }
+    })
   }
 
   updateList() {

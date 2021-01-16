@@ -30,6 +30,13 @@ export default class Login extends Component {
 
     loginEmailPassword() {
         auth.signInWithEmailAndPassword(this.state.email, this.state.password)
+            .then(() => {
+                const data = {
+                    email: this.state.email
+                }
+
+                axios.post(`${process.env.REACT_APP_BACKEND_URL}/onLogin`, data)
+            })
             .catch((error) => {
                 this.setState({
                     error: error.message
