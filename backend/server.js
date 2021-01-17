@@ -52,21 +52,8 @@ let transporter = nodemailer.createTransport({
     }
 });
 
-app.post('/onLogin', function(req, res) {
-    const email = req.body.email
-
-    if(email) {
-        admin
-            .auth()
-            .getUserByEmail(email)
-            .then((userRecord) => {
-                user = userRecord
-            })
-    } else {
-        user = null
-    }
-
-    console.log(user)
+app.post('/onAuthStateChanged', function(req, res) {
+    const user = req.body
 })
 
 app.post('/updateList', function(req, res) {
