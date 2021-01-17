@@ -51,7 +51,7 @@ class App extends Component {
       auth.onAuthStateChanged((user) => {      
         if (user) {
           this.setState({ user })
-          setTimeout(this.updateList, 4000)
+          setTimeout(this.updateList, 6000)
         } else {
           this.setState({
             user: null,
@@ -61,7 +61,7 @@ class App extends Component {
 
         setTimeout(() => {
           axios.post(`${process.env.REACT_APP_BACKEND_URL}/onAuthStateChanged`, this.state.user)
-        }, 2000)
+        }, 3000)
       })
     }
   }
@@ -112,13 +112,6 @@ class App extends Component {
 
   signOut() {
     auth.signOut()
-      .then(() => {
-        const data = {
-            email: null
-        }
-
-        axios.post(`${process.env.REACT_APP_BACKEND_URL}/onLogin`, data)
-    })
   }
 
   getProductDetails() {
