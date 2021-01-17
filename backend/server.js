@@ -53,7 +53,7 @@ let transporter = nodemailer.createTransport({
 });
 
 app.post('/onAuthStateChanged', function(req, res) {
-    const user = req.body
+    user = req.body
 })
 
 app.post('/updateList', function(req, res) {
