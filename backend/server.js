@@ -85,6 +85,9 @@ app.post('/getProductDetails', function(req, res) {
                 currentPrice = $('#priceblock_dealprice').text().replace(/\s\s+/g, '')
             } 
 
+            console.log(productTitle)
+            console.log(currentPrice)
+
             const data = {
                 productTitle, 
                 currentPrice,
@@ -174,6 +177,9 @@ function checkPrice() {
                                     if(currentPrice === "") {
                                         currentPrice = $('#priceblock_dealprice').text().replace(/\s\s+/g, '')
                                     } 
+
+                                    console.log(productTitle)
+                                    console.log(currentPrice)
       
                                     const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
                                     const today = new Date();
