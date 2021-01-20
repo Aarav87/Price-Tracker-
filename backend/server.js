@@ -6,6 +6,7 @@ const nodemailer = require('nodemailer')
 const cheerio = require('cheerio')
 const admin = require('firebase-admin')
 const axios = require('axios')
+const request = require('request')
 
 const app = express();
 
@@ -72,9 +73,8 @@ app.post('/updateList', function(req, res) {
 app.post('/getProductDetails', function(req, res) {
     const url = req.body.url
 
-    axios(url) 
-        .then(response => {
-            const html = response.data
+    request(url, (error, response, html) => { 
+        if(!error && response.statusCode === 200) {
             var $ = cheerio.load(html);
             const productTitle = $('#titleSection').text().replace(/\s\s+/g, '')
             var currentPrice = $('#priceblock_ourprice').text().replace(/\s\s+/g, '')
@@ -93,8 +93,8 @@ app.post('/getProductDetails', function(req, res) {
             }
 
             res.send(data)
-        })
-        .catch((error) => {});  
+        }
+    })
 })
 
 app.post('/addProduct', function(req, res) {
@@ -162,8 +162,8 @@ function checkPrice() {
                         const url = item.url
 
                         setInterval(() => {
-                            axios(url) 
-                                .then(response => {
+                            request(url, (error, response, html) => { 
+                                if(!error && response.statusCode === 200) {
                                    const html = response.data
                                     var $ = cheerio.load(html);
                                     const productTitle = $('#titleSection').text().replace(/\s\s+/g, '')
@@ -199,9 +199,8 @@ function checkPrice() {
                                             youSave: youSave 
                                         })
                                     } 
-
-                                })    
-                                .catch((error) => {});     
+                                }
+                            })
                         }, 5000);
                     })
                 } 
