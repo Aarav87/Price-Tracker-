@@ -76,7 +76,7 @@ app.post('/getProductDetails', function(req, res) {
         .then(response => {
             const html = response.data
             var $ = cheerio.load(html);
-            const productTitle = $('#productTitle').text().replace(/\s\s+/g, '')
+            const productTitle = $('#titleSection').text().replace(/\s\s+/g, '')
             var currentPrice = $('#priceblock_ourprice').text().replace(/\s\s+/g, '')
             const imageUrl = $('#landingImage').attr("data-old-hires")
             const youSave = $('#regularprice_savings').text().replace(/\s\s+/g, '')
@@ -92,9 +92,10 @@ app.post('/getProductDetails', function(req, res) {
                 youSave
             }
 
-            res.send(data)
-        
-    })
+            res.send(data)   
+        }).catch((error) => {
+            console.log(error)
+        })
 })
 
 app.post('/addProduct', function(req, res) {
@@ -109,7 +110,7 @@ app.post('/addProduct', function(req, res) {
         youSave: req.body.youSave
     }
 
-    var ref = db.collection('users').doc(process.env.EMAIL).collection('products').doc(data.productTitle)
+    var ref = db.collection('users').doc(user.email).collection('products').doc(data.productTitle)
     ref.set({ 
       url: data.url,
       productTitle: data.productTitle,
@@ -166,7 +167,7 @@ function checkPrice() {
                                 .then(response => {
                                    const html = response.data
                                     var $ = cheerio.load(html);
-                                    const productTitle = $('#productTitle').text().replace(/\s\s+/g, '')
+                                    const productTitle = $('#titleSection').text().replace(/\s\s+/g, '')
                                     var currentPrice = $('#priceblock_ourprice').text().replace(/\s\s+/g, '')
                                     const imageUrl = $('#landingImage').attr("data-old-hires")
                                     const youSave = $('#regularprice_savings').text().replace(/\s\s+/g, '')
@@ -175,7 +176,6 @@ function checkPrice() {
                                         currentPrice = $('#priceblock_dealprice').text().replace(/\s\s+/g, '')
                                     } 
 
-      
                                     const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
                                     const today = new Date();
                                     const dd = String(today.getDate())
@@ -200,7 +200,9 @@ function checkPrice() {
                                             youSave: youSave 
                                         })
                                     } 
-                            })
+                                }).catch((error) => {
+                                    console.log(error)
+                                })
                         }, 5000);
                     })
                 } 
