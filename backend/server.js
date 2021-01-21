@@ -52,9 +52,19 @@ let transporter = nodemailer.createTransport({
     }
 });
 
-app.post('/onAuthStateChanged', function(req, res) {
-    user = req.body
-})
+app.post('/onLogin', function(req, res) {
+    const email = req.body.email
+
+    admin
+        .auth()
+        .getUserByEmail(email)
+        .then((userRecord) => {
+            user = userRecord.toJSON()
+        })
+        .catch((error) => {
+            console.log('Error fetching user data:', error);
+        });
+    })
 
 app.post('/updateList', function(req, res) {
     db.collection(`/users/${user.email}/products`)
@@ -84,9 +94,6 @@ app.post('/getProductDetails', function(req, res) {
             if(currentPrice === "") {
                 currentPrice = $('#priceblock_dealprice').text().replace(/\s\s+/g, '')
             } 
-
-            console.log(productTitle)
-            console.log(currentPrice)
 
             const data = {
                 productTitle, 
