@@ -57,6 +57,10 @@ class App extends Component {
           loading: false
         })
       }
+
+      setTimeout(() => {
+        axios.post(`${process.env.REACT_APP_BACKEND_URL}/onAuthStateChanged`, this.state.user)
+      }, 3000);
     })
   }
 

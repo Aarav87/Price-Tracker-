@@ -6,6 +6,7 @@ const nodemailer = require('nodemailer')
 const cheerio = require('cheerio')
 const admin = require('firebase-admin')
 const axios = require('axios')
+const puppeteer = require('puppeteer');
 
 const app = express();
 
@@ -52,19 +53,9 @@ let transporter = nodemailer.createTransport({
     }
 });
 
-app.post('/onLogin', function(req, res) {
-    const email = req.body.email
-
-    admin
-        .auth()
-        .getUserByEmail(email)
-        .then((userRecord) => {
-            user = userRecord.toJSON()
-        })
-        .catch((error) => {
-            console.log('Error fetching user data:', error);
-        });
-    })
+app.post('/onAuthStateChanged', function(req, res) {
+    user = req.body
+})
 
 app.post('/updateList', function(req, res) {
     db.collection(`/users/${user.email}/products`)
@@ -82,9 +73,17 @@ app.post('/updateList', function(req, res) {
 app.post('/getProductDetails', function(req, res) {
     const url = req.body.url
 
-    axios(url) 
-        .then(response => {
-            const html = response.data
+    puppeteer
+        .launch()
+        .then(function(browser) {
+            return browser.newPage();
+        })
+        .then(function(page) {
+            return page.goto(url).then(function() {
+                return page.content();
+            });
+        })
+        .then(function(html) {
             var $ = cheerio.load(html);
             const productTitle = $('#titleSection').text().replace(/\s\s+/g, '')
             var currentPrice = $('#priceblock_ourprice').text().replace(/\s\s+/g, '')
@@ -104,7 +103,10 @@ app.post('/getProductDetails', function(req, res) {
 
             res.send(data)
         
-    }).catch((error) => {})
+        })
+        .catch((error) => {
+            error
+        })
 })
 
 app.post('/addProduct', function(req, res) {
@@ -172,9 +174,17 @@ function checkPrice() {
                         const url = item.url
 
                         setInterval(() => {
-                            axios(url) 
-                                .then(response => {
-                                   const html = response.data
+                           puppeteer
+                                .launch()
+                                .then(function(browser) {
+                                    return browser.newPage();
+                                })
+                                .then(function(page) {
+                                    return page.goto(url).then(function() {
+                                        return page.content();
+                                    });
+                                })
+                                .then(function(html) {
                                     var $ = cheerio.load(html);
                                     const productTitle = $('#titleSection').text().replace(/\s\s+/g, '')
                                     var currentPrice = $('#priceblock_ourprice').text().replace(/\s\s+/g, '')
@@ -212,7 +222,10 @@ function checkPrice() {
                                             youSave: youSave 
                                         })
                                     } 
-                            }).catch((error) => {})
+                            })
+                            .catch((error) => {
+                                console.log(error)
+                            })
                         }, 5000);
                     })
                 } 
