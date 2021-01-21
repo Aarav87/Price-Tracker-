@@ -74,7 +74,7 @@ app.post('/getProductDetails', function(req, res) {
     const url = req.body.url
 
     puppeteer
-        .launch()
+        .launch({headless: true})
         .then(function(browser) {
             return browser.newPage();
         })
