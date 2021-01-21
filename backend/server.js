@@ -109,7 +109,7 @@ app.post('/addProduct', function(req, res) {
         youSave: req.body.youSave
     }
 
-    var ref = db.collection('users').doc(user.email).collection('products').doc(data.productTitle)
+    var ref = db.collection('users').doc(process.env.EMAIL).collection('products').doc(data.productTitle)
     ref.set({ 
       url: data.url,
       productTitle: data.productTitle,
@@ -174,6 +174,7 @@ function checkPrice() {
                                     if(currentPrice === "") {
                                         currentPrice = $('#priceblock_dealprice').text().replace(/\s\s+/g, '')
                                     } 
+
       
                                     const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
                                     const today = new Date();
