@@ -12,7 +12,7 @@ const app = express();
 //use cors to allow cross origin resource sharing
 app.use(
   cors({
-    origin: 'https://www.amazon.ca',
+    origin: 'https://www.amazon.ca/Nintendo-Surround-Cancelling-Headphones-Playstation/dp/B07FSYK636/ref=sr_1_2_sspa?dchild=1&keywords=headset&qid=1611188432&sr=8-2-spons&psc=1&smid=A3NBYM5RIBOWBC&spLa=ZW5jcnlwdGVkUXVhbGlmaWVyPUEyTlk2TVRPRVUyRUFWJmVuY3J5cHRlZElkPUEwODU5ODcyMUkxMU85TjgySkg2MiZlbmNyeXB0ZWRBZElkPUEwNjg0NzI5M0w1WE9CNkNEMTY0MyZ3aWRnZXROYW1lPXNwX2F0ZiZhY3Rpb249Y2xpY2tSZWRpcmVjdCZkb05vdExvZ0NsaWNrPXRydWU=',
     credentials: true,
   })
 );
