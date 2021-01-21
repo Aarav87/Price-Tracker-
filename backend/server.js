@@ -6,7 +6,6 @@ const nodemailer = require('nodemailer')
 const cheerio = require('cheerio')
 const admin = require('firebase-admin')
 const axios = require('axios')
-const request = require('request')
 
 const app = express();
 
@@ -73,10 +72,11 @@ app.post('/updateList', function(req, res) {
 app.post('/getProductDetails', function(req, res) {
     const url = req.body.url
 
-    request(url, (error, response, html) => { 
-        if(!error && response.statusCode === 200) {
+    axios(url) 
+        .then(response => {
+            const html = response.data
             var $ = cheerio.load(html);
-            const productTitle = $('#titleSection').text().replace(/\s\s+/g, '')
+            const productTitle = $('#productTitle').text().replace(/\s\s+/g, '')
             var currentPrice = $('#priceblock_ourprice').text().replace(/\s\s+/g, '')
             const imageUrl = $('#landingImage').attr("data-old-hires")
             const youSave = $('#regularprice_savings').text().replace(/\s\s+/g, '')
@@ -84,9 +84,6 @@ app.post('/getProductDetails', function(req, res) {
             if(currentPrice === "") {
                 currentPrice = $('#priceblock_dealprice').text().replace(/\s\s+/g, '')
             } 
-
-            console.log(productTitle)
-            console.log(currentPrice)
 
             const data = {
                 productTitle, 
@@ -96,7 +93,7 @@ app.post('/getProductDetails', function(req, res) {
             }
 
             res.send(data)
-        }
+        
     })
 })
 
@@ -165,11 +162,11 @@ function checkPrice() {
                         const url = item.url
 
                         setInterval(() => {
-                            request(url, (error, response, html) => { 
-                                if(!error && response.statusCode === 200) {
+                            axios(url) 
+                                .then(response => {
                                    const html = response.data
                                     var $ = cheerio.load(html);
-                                    const productTitle = $('#titleSection').text().replace(/\s\s+/g, '')
+                                    const productTitle = $('#productTitle').text().replace(/\s\s+/g, '')
                                     var currentPrice = $('#priceblock_ourprice').text().replace(/\s\s+/g, '')
                                     const imageUrl = $('#landingImage').attr("data-old-hires")
                                     const youSave = $('#regularprice_savings').text().replace(/\s\s+/g, '')
@@ -177,9 +174,6 @@ function checkPrice() {
                                     if(currentPrice === "") {
                                         currentPrice = $('#priceblock_dealprice').text().replace(/\s\s+/g, '')
                                     } 
-
-                                    console.log(productTitle)
-                                    console.log(currentPrice)
       
                                     const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
                                     const today = new Date();
@@ -205,7 +199,6 @@ function checkPrice() {
                                             youSave: youSave 
                                         })
                                     } 
-                                }
                             })
                         }, 5000);
                     })
@@ -263,5 +256,3 @@ setInterval(checkPrice, 77760000)
 setInterval(priceMet, 86400000)
 
 app.listen(PORT);
-
-console.log(PORT)
