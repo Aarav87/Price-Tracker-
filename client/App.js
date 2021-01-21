@@ -119,6 +119,7 @@ class App extends Component {
 
     axios.post(`${process.env.REACT_APP_BACKEND_URL}/getProductDetails`, data)
       .then((response) => {
+        console.log(data)
         this.setState({
           productTitle: response.data.productTitle.replace('/', ' '),
           currentProductPrice: response.data.currentPrice,

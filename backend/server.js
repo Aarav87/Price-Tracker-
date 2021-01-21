@@ -101,6 +101,8 @@ app.post('/getProductDetails', function(req, res) {
                 youSave
             }
 
+            console.log(data)
+
             res.send(data)
         
         })
