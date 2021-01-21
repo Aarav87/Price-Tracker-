@@ -74,7 +74,11 @@ app.post('/getProductDetails', function(req, res) {
     const url = req.body.url
 
     puppeteer
-        .launch({headless: true})
+        .launch({
+            headless: false,
+            args: ["--disable-setuid-sandbox"],
+            'ignoreHTTPSErrors': true
+        })
         .then(function(browser) {
             return browser.newPage();
         })
@@ -177,7 +181,11 @@ function checkPrice() {
 
                         setInterval(() => {
                            puppeteer
-                                .launch()
+                                .launch({
+                                    headless: false,
+                                    args: ["--disable-setuid-sandbox"],
+                                    'ignoreHTTPSErrors': true
+                                })
                                 .then(function(browser) {
                                     return browser.newPage();
                                 })
