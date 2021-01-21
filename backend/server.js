@@ -12,7 +12,7 @@ const app = express();
 //use cors to allow cross origin resource sharing
 app.use(
   cors({
-    origin: 'https://www.amazon.ca/Nintendo-Surround-Cancelling-Headphones-Playstation/dp/B07FSYK636/ref=sr_1_2_sspa?dchild=1&keywords=headset&qid=1611188432&sr=8-2-spons&psc=1&smid=A3NBYM5RIBOWBC&spLa=ZW5jcnlwdGVkUXVhbGlmaWVyPUEyTlk2TVRPRVUyRUFWJmVuY3J5cHRlZElkPUEwODU5ODcyMUkxMU85TjgySkg2MiZlbmNyeXB0ZWRBZElkPUEwNjg0NzI5M0w1WE9CNkNEMTY0MyZ3aWRnZXROYW1lPXNwX2F0ZiZhY3Rpb249Y2xpY2tSZWRpcmVjdCZkb05vdExvZ0NsaWNrPXRydWU=',
+    origin: 'https://www.amazon.ca',
     credentials: true,
   })
 );
@@ -76,7 +76,7 @@ app.post('/getProductDetails', function(req, res) {
         .then(response => {
             const html = response.data
             var $ = cheerio.load(html);
-            const productTitle = $('#productTitle').text().replace(/\s\s+/g, '')
+            const productTitle = $('#titleSection').text().replace(/\s\s+/g, '')
             var currentPrice = $('#priceblock_ourprice').text().replace(/\s\s+/g, '')
             const imageUrl = $('#landingImage').attr("data-old-hires")
             const youSave = $('#regularprice_savings').text().replace(/\s\s+/g, '')
@@ -84,6 +84,9 @@ app.post('/getProductDetails', function(req, res) {
             if(currentPrice === "") {
                 currentPrice = $('#priceblock_dealprice').text().replace(/\s\s+/g, '')
             } 
+
+            console.log(productTitle)
+            console.log(currentPrice)
 
             const data = {
                 productTitle, 
@@ -109,7 +112,7 @@ app.post('/addProduct', function(req, res) {
         youSave: req.body.youSave
     }
 
-    var ref = db.collection('users').doc(process.env.EMAIL).collection('products').doc(data.productTitle)
+    var ref = db.collection('users').doc(user.email).collection('products').doc(data.productTitle)
     ref.set({ 
       url: data.url,
       productTitle: data.productTitle,
@@ -166,7 +169,7 @@ function checkPrice() {
                                 .then(response => {
                                    const html = response.data
                                     var $ = cheerio.load(html);
-                                    const productTitle = $('#productTitle').text().replace(/\s\s+/g, '')
+                                    const productTitle = $('#titleSection').text().replace(/\s\s+/g, '')
                                     var currentPrice = $('#priceblock_ourprice').text().replace(/\s\s+/g, '')
                                     const imageUrl = $('#landingImage').attr("data-old-hires")
                                     const youSave = $('#regularprice_savings').text().replace(/\s\s+/g, '')
@@ -175,6 +178,8 @@ function checkPrice() {
                                         currentPrice = $('#priceblock_dealprice').text().replace(/\s\s+/g, '')
                                     } 
 
+                                    console.log(productTitle)
+                                    console.log(currentPrice)
       
                                     const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
                                     const today = new Date();
@@ -257,3 +262,5 @@ setInterval(checkPrice, 77760000)
 setInterval(priceMet, 86400000)
 
 app.listen(PORT);
+
+console.log(PORT)
