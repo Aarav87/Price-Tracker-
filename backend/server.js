@@ -104,7 +104,7 @@ app.post('/getProductDetails', function(req, res) {
 
             res.send(data)
         
-    })
+    }).catch((error) => {})
 })
 
 app.post('/addProduct', function(req, res) {
@@ -212,7 +212,7 @@ function checkPrice() {
                                             youSave: youSave 
                                         })
                                     } 
-                            })
+                            }).catch((error) => {})
                         }, 5000);
                     })
                 } 
