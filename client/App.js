@@ -47,26 +47,29 @@ class App extends Component {
   }
   
   componentDidMount() {
-    auth.onAuthStateChanged((user) => {      
-      if (user) {
-        this.setState({ user })
-        setTimeout(this.updateList, 6000)
-      } else {
-        this.setState({
-          user: null,
-          loading: false
-        })
-      }
+    if(window.location.href.slice(0, 22) === "https://www.amazon.ca/") {
+      auth.onAuthStateChanged((user) => {      
+        if (user) {
+          this.setState({ user })
+          setTimeout(this.updateList, 6000)
+        } else {
+          this.setState({
+            user: null,
+            loading: false
+          })
+        }
 
-      setTimeout(() => {
-        axios.post(`${process.env.REACT_APP_BACKEND_URL}/onAuthStateChanged`, this.state.user)
-      }, 3000);
-    })
+        setTimeout(() => {
+          axios.post(`${process.env.REACT_APP_BACKEND_URL}/onAuthStateChanged`, this.state.user)
+        }, 3000);
+      })
+    }
   }
 
   updateList() {
     axios.post(`${process.env.REACT_APP_BACKEND_URL}/updateList`)
       .then((response) => {
+        console.log(response)
         this.setState({
           items: response.data,
           loading: false
@@ -119,7 +122,6 @@ class App extends Component {
 
     axios.post(`${process.env.REACT_APP_BACKEND_URL}/getProductDetails`, data)
       .then((response) => {
-        console.log(data)
         this.setState({
           productTitle: response.data.productTitle.replace('/', ' '),
           currentProductPrice: response.data.currentPrice,

@@ -107,7 +107,7 @@ app.post('/getProductDetails', function(req, res) {
         
         })
         .catch((error) => {
-            error
+            console.log(error)
         })
 })
 
