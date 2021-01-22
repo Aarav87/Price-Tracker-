@@ -105,8 +105,6 @@ app.post('/getProductDetails', function(req, res) {
                 youSave
             }
 
-            console.log(data)
-
             res.send(data)
         
         })
@@ -182,9 +180,8 @@ function checkPrice() {
                         setInterval(() => {
                            puppeteer
                                 .launch({
-                                    headless: false,
-                                    args: ["--disable-setuid-sandbox"],
-                                    'ignoreHTTPSErrors': true
+                                    headless: true,
+                                    args: ["--no-sandbox"]
                                 })
                                 .then(function(browser) {
                                     return browser.newPage();
@@ -204,9 +201,6 @@ function checkPrice() {
                                     if(currentPrice === "") {
                                         currentPrice = $('#priceblock_dealprice').text().replace(/\s\s+/g, '')
                                     } 
-
-                                    console.log(productTitle)
-                                    console.log(currentPrice)
       
                                     const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
                                     const today = new Date();
@@ -292,5 +286,3 @@ setInterval(checkPrice, 77760000)
 setInterval(priceMet, 86400000)
 
 app.listen(PORT);
-
-console.log(PORT)
