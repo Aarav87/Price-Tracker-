@@ -75,9 +75,8 @@ app.post('/getProductDetails', function(req, res) {
 
     puppeteer
         .launch({
-            headless: false,
-            args: ["--disable-setuid-sandbox"],
-            'ignoreHTTPSErrors': true
+            headless: true,
+            args: ["--no-sandbox"]
         })
         .then(function(browser) {
             return browser.newPage();
