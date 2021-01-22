@@ -73,43 +73,44 @@ app.post('/updateList', function(req, res) {
 app.post('/getProductDetails', function(req, res) {
     const url = req.body.url
 
-    puppeteer
-        .launch({
-            headless: true,
-            args: ["--no-sandbox"]
-        })
-        .then(function(browser) {
-            return browser.newPage();
-        })
-        .then(function(page) {
-            return page.goto(url).then(function() {
-                return page.content();
-            });
-        })
-        .then(function(html) {
-            var $ = cheerio.load(html);
-            const productTitle = $('#titleSection').text().replace(/\s\s+/g, '')
-            var currentPrice = $('#priceblock_ourprice').text().replace(/\s\s+/g, '')
-            const imageUrl = $('#landingImage').attr("data-old-hires")
-            const youSave = $('#regularprice_savings').text().replace(/\s\s+/g, '')
-        
-            if(currentPrice === "") {
-                currentPrice = $('#priceblock_dealprice').text().replace(/\s\s+/g, '')
-            } 
+    try {
+        puppeteer
+            .launch({
+                headless: true,
+                args: ["--no-sandbox"]
+            })
+            .then(function(browser) {
+                return browser.newPage();
+            })
+            .then(function(page) {
+                return page.goto(url).then(function() {
+                    return page.content();
+                });
+            })
+            .then(function(html) {
+                var $ = cheerio.load(html);
+                const productTitle = $('#titleSection').text().replace(/\s\s+/g, '')
+                var currentPrice = $('#priceblock_ourprice').text().replace(/\s\s+/g, '')
+                const imageUrl = $('#landingImage').attr("data-old-hires")
+                const youSave = $('#regularprice_savings').text().replace(/\s\s+/g, '')
+            
+                if(currentPrice === "") {
+                    currentPrice = $('#priceblock_dealprice').text().replace(/\s\s+/g, '')
+                } 
 
-            const data = {
-                productTitle, 
-                currentPrice,
-                imageUrl,
-                youSave
-            }
+                const data = {
+                    productTitle, 
+                    currentPrice,
+                    imageUrl,
+                    youSave
+                }
 
-            res.send(data)
-        
-        })
-        .catch((error) => {
-            console.log(error)
-        })
+                res.send(data)
+            })
+
+    } catch(err) {
+        console.log(err)
+    }
 })
 
 app.post('/addProduct', function(req, res) {
