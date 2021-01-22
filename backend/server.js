@@ -73,44 +73,44 @@ app.post('/updateList', function(req, res) {
 app.post('/getProductDetails', function(req, res) {
     const url = req.body.url
 
-    try {
-        puppeteer
-            .launch({
-                headless: true,
-                args: ["--no-sandbox"]
-            })
-            .then(function(browser) {
-                return browser.newPage();
-            })
-            .then(function(page) {
-                return page.goto(url).then(function() {
-                    return page.content();
-                });
-            })
-            .then(function(html) {
-                var $ = cheerio.load(html);
-                const productTitle = $('#titleSection').text().replace(/\s\s+/g, '')
-                var currentPrice = $('#priceblock_ourprice').text().replace(/\s\s+/g, '')
-                const imageUrl = $('#landingImage').attr("data-old-hires")
-                const youSave = $('#regularprice_savings').text().replace(/\s\s+/g, '')
-            
+    const scrapeProductDetails = async (url) => {
+        const browser = puppeteer.launch({
+            headless: true,
+            args: ["--no-sandbox"]
+        })
+
+        const page = await browser.newPage()
+        var data = {}
+        
+        try {
+            await page.goto(url)
+
+            const productDetails = await page.evaluate(() => {
+                const productTitle = document.querySelectorAll('#titleSection').text().replace(/\s\s+/g, '')
+                var currentPrice = document.querySelectorAll('#priceblock_ourprice').text().replace(/\s\s+/g, '')
+                const imageUrl = document.querySelectorAll('#landingImage').attr("data-old-hires")
+                const youSave = document.querySelectorAll('#regularprice_savings').text().replace(/\s\s+/g, '')
+
                 if(currentPrice === "") {
-                    currentPrice = $('#priceblock_dealprice').text().replace(/\s\s+/g, '')
+                    currentPrice = document.querySelectorAll('#priceblock_dealprice').text().replace(/\s\s+/g, '')
                 } 
 
-                const data = {
+                data = {
                     productTitle, 
                     currentPrice,
                     imageUrl,
                     youSave
                 }
-
-                res.send(data)
             })
-
-    } catch(err) {
-        console.log(err)
+        } catch(e) {
+            console.log(e)
+        }
+        
+        res.send(data)
+        browser.close()
     }
+
+    scrapeProductDetails(url).catch(console.error)
 })
 
 app.post('/addProduct', function(req, res) {
