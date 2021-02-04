@@ -73,37 +73,33 @@ app.post('/updateList', function(req, res) {
 app.post('/getProductDetails', async function(req, res) {
     var url = req.body.url
 
+    console.log(url)
+
     const browser = puppeteer.launch({
         headless: true,
         args: ["--no-sandbox"]
     })
 
     var page = await browser.newPage()
-    var data = {}
-    
-    try {
-        await page.goto(url)
+    await page.goto(url)
 
-        const productDetails = await page.evaluate(() => {
-            const productTitle = document.querySelectorAll('#titleSection').text().replace(/\s\s+/g, '')
-            var currentPrice = document.querySelectorAll('#priceblock_ourprice').text().replace(/\s\s+/g, '')
-            const imageUrl = document.querySelectorAll('#landingImage').attr("data-old-hires")
-            const youSave = document.querySelectorAll('#regularprice_savings').text().replace(/\s\s+/g, '')
+    const productDetails = await page.evaluate(() => {
+        const productTitle = document.querySelectorAll('#titleSection').replace(/\s\s+/g, '')
+        var currentPrice = document.querySelectorAll('#priceblock_ourprice').replace(/\s\s+/g, '')
+        const imageUrl = document.querySelectorAll('#landingImage').attr("data-old-hires")
+        const youSave = document.querySelectorAll('#regularprice_savings').replace(/\s\s+/g, '')
 
-            if(currentPrice === "") {
-                currentPrice = document.querySelectorAll('#priceblock_dealprice').text().replace(/\s\s+/g, '')
-            } 
+        if(currentPrice === "") {
+            currentPrice = document.querySelectorAll('#priceblock_dealprice').replace(/\s\s+/g, '')
+        } 
 
-            data = {
-                productTitle, 
-                currentPrice,
-                imageUrl,
-                youSave
-            }
-        })
-    } catch(e) {
-        console.log(e)
-    }
+        data = {
+            productTitle, 
+            currentPrice,
+            imageUrl,
+            youSave
+        }
+    })
     
     res.send(data)
     browser.close()
