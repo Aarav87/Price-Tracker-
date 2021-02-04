@@ -75,10 +75,7 @@ app.post('/getProductDetails', async function(req, res) {
 
     console.log(url)
 
-    const browser = puppeteer.launch({
-        headless: true,
-        args: ["--no-sandbox"]
-    })
+    const browser = puppeteer.launch()
 
     var page = await browser.newPage()
     await page.goto(url)
