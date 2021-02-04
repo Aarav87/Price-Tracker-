@@ -71,7 +71,7 @@ app.post('/updateList', function(req, res) {
 })
 
 app.post('/getProductDetails', async function(req, res) {
-    const url = req.body.url
+    var url = req.body.url
 
     const browser = puppeteer.launch({
         headless: true,
