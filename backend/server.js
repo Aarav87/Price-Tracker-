@@ -75,28 +75,37 @@ app.post('/getProductDetails', async function(req, res) {
 
     console.log(url)
 
-    const browser = puppeteer.launch()
-
-    var page = await browser.newPage()
-    await page.goto(url)
-
-    const productDetails = await page.evaluate(() => {
-        const productTitle = document.querySelectorAll('#titleSection').replace(/\s\s+/g, '')
-        var currentPrice = document.querySelectorAll('#priceblock_ourprice').replace(/\s\s+/g, '')
-        const imageUrl = document.querySelectorAll('#landingImage').attr("data-old-hires")
-        const youSave = document.querySelectorAll('#regularprice_savings').replace(/\s\s+/g, '')
-
-        if(currentPrice === "") {
-            currentPrice = document.querySelectorAll('#priceblock_dealprice').replace(/\s\s+/g, '')
-        } 
-
-        data = {
-            productTitle, 
-            currentPrice,
-            imageUrl,
-            youSave
-        }
+    const browser = puppeteer.launch({
+        headless: true,
+        args: ["--no-sandbox"]
     })
+
+    var data = {}
+    
+    try {
+        var page = await browser.newPage()
+        await page.goto(url)
+
+        const productDetails = await page.evaluate(() => {
+            const productTitle = document.querySelectorAll('#titleSection').replace(/\s\s+/g, '')
+            var currentPrice = document.querySelectorAll('#priceblock_ourprice').replace(/\s\s+/g, '')
+            const imageUrl = document.querySelectorAll('#landingImage').attr("data-old-hires")
+            const youSave = document.querySelectorAll('#regularprice_savings').replace(/\s\s+/g, '')
+
+            if(currentPrice === "") {
+                currentPrice = document.querySelectorAll('#priceblock_dealprice').replace(/\s\s+/g, '')
+            } 
+
+            data = {
+                productTitle, 
+                currentPrice,
+                imageUrl,
+                youSave
+            }
+        })
+    } catch(e) {
+        console.log(e)
+    }
     
     res.send(data)
     browser.close()
