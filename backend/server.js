@@ -75,10 +75,10 @@ app.post('/getProductDetails', async function(req, res) {
 
     const browser = await puppeteer.launch({headless: true, args: ["--no-sandbox"]})
     var page = await browser.newPage()
-    await page.goto(url)
-    await page.waitForSelector('body');
 
     try {
+        await page.goto(url)
+        await page.waitForSelector('body');
         var data = null
 
         const productDetails = await page.evaluate(() => {
