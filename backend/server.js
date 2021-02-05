@@ -73,39 +73,31 @@ app.post('/updateList', function(req, res) {
 app.post('/getProductDetails', async function(req, res) {
     var url = req.body.url
 
-    const browser = await puppeteer.launch({args: ["--no-sandbox"]})
+    const browser = await puppeteer.launch({headless: true, args: ["--no-sandbox"]})
     var page = await browser.newPage()
-    
-    try {
-        var data = {}
-        console.log(url)
-        await page.goto(url)
+    await page.goto(url)
+    await page.waitForSelector('body');
 
-        const productDetails = await page.evaluate(() => {
-            const productTitle = document.querySelector('#productTitle')
-            var currentPrice = document.querySelector('#priceblock_ourprice')
-            const imageUrl = document.querySelector('#landingImage')
-            const youSave = document.querySelector('#regularprice_savings')
+    const productDetails = await page.evaluate(() => {
+        const productTitle = document.body.querySelector('#productTitle').innerText;
+        var currentPrice = document.body.querySelector('#priceblock_ourprice').innerText;
+        const imageUrl = document.body.querySelector('#landingImage').innerText;
+        const youSave = document.body.querySelector('#regularprice_savings').innerText;
 
-            if(currentPrice === "") {
-                currentPrice = document.querySelectorAll('#priceblock_dealprice')
-            } 
+        if(currentPrice === "") {
+            currentPrice = document.body.querySelector('#priceblock_dealprice').innerText;
+        } 
 
-            const data = {
-                productTitle, 
-                currentPrice,
-                imageUrl,
-                youSave
-            }
+        const data = {
+            productTitle, 
+            currentPrice,
+            imageUrl,
+            youSave
+        }
 
-            console.log(data)
-        })
-
+        console.log(data)
         res.send(data)
-
-    } catch(e) {
-        console.log(e)
-    }
+    })
 
     browser.close()
 })
