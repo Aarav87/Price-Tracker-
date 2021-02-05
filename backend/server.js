@@ -79,7 +79,7 @@ app.post('/getProductDetails', async function(req, res) {
     await page.waitForSelector('body');
 
     try {
-        var data = {}
+        var data = null
 
         const productDetails = await page.evaluate(() => {
             const productTitle = document.querySelector('#title').innerText;
