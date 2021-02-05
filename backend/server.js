@@ -73,8 +73,6 @@ app.post('/updateList', function(req, res) {
 app.post('/getProductDetails', async function(req, res) {
     var url = req.body.url
 
-    console.log(url)
-
     const browser = await puppeteer.launch({
         headless: true,
         args: ["--no-sandbox"]
@@ -102,6 +100,8 @@ app.post('/getProductDetails', async function(req, res) {
                 imageUrl,
                 youSave
             }
+
+            console.log(data)
         })
     } catch(e) {
         console.log(e)
