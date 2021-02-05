@@ -73,10 +73,7 @@ app.post('/updateList', function(req, res) {
 app.post('/getProductDetails', async function(req, res) {
     var url = req.body.url
 
-    const browser = await puppeteer.launch({
-        headless: true,
-        args: ["--no-sandbox"]
-    })
+    const browser = await puppeteer.launch({args: ["--no-sandbox"]})
 
     var data = {}
     
