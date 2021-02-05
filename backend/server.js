@@ -79,6 +79,8 @@ app.post('/getProductDetails', async function(req, res) {
     await page.waitForSelector('body');
 
     try {
+        var data = {}
+
         const productDetails = await page.evaluate(() => {
             const productTitle = document.querySelector('#title').innerText;
             var currentPrice = document.querySelector('#priceblock_ourprice_row > td.a-span12').innerText;
@@ -89,16 +91,16 @@ app.post('/getProductDetails', async function(req, res) {
                 currentPrice = document.body.querySelector('#priceblock_dealprice')
             } 
 
-            const data = {
+            data = {
                 productTitle, 
                 currentPrice,
                 imageUrl,
                 youSave
             }
-
-            console.log(data)
-            res.send(data)
         })
+
+        console.log(data)
+        res.send(data)
     }
     catch(e) {
         console.log(e)
