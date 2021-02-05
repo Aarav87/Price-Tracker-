@@ -79,16 +79,15 @@ app.post('/getProductDetails', async function(req, res) {
         var data = {}
         var page = await browser.newPage()
         await page.goto(url)
-        await page.waitForSelector('body');
 
         const productDetails = await page.evaluate(() => {
-            const productTitle = document.body.querySelector('#productTitle').innerText;
-            var currentPrice = document.body.querySelector('#priceblock_ourprice').innerText;
-            const imageUrl = document.body.querySelector('#landingImage').src;
-            const youSave = document.body.querySelector('#regularprice_savings').innerText;
+            const productTitle = document.querySelector('#productTitle')
+            var currentPrice = document.querySelector('#priceblock_ourprice')
+            const imageUrl = document.querySelector('#landingImage')
+            const youSave = document.querySelector('#regularprice_savings')
 
             if(currentPrice === "") {
-                currentPrice = document.querySelectorAll('#priceblock_dealprice').innerText;
+                currentPrice = document.querySelectorAll('#priceblock_dealprice');
             } 
 
             data = {
