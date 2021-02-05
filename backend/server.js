@@ -82,13 +82,13 @@ app.post('/getProductDetails', async function(req, res) {
         await page.goto(url)
 
         const productDetails = await page.evaluate(() => {
-            const productTitle = document.querySelectorAll('#titleSection').replace(/\s\s+/g, '')
-            var currentPrice = document.querySelectorAll('#priceblock_ourprice').replace(/\s\s+/g, '')
-            const imageUrl = document.querySelectorAll('#landingImage').attr("data-old-hires")
-            const youSave = document.querySelectorAll('#regularprice_savings').replace(/\s\s+/g, '')
+            const productTitle = document.querySelectorAll('#titleSection')
+            var currentPrice = document.querySelectorAll('#priceblock_ourprice')
+            const imageUrl = document.querySelectorAll('#landingImage')
+            const youSave = document.querySelectorAll('#regularprice_savings')
 
             if(currentPrice === "") {
-                currentPrice = document.querySelectorAll('#priceblock_dealprice').replace(/\s\s+/g, '')
+                currentPrice = document.querySelectorAll('#priceblock_dealprice')
             } 
 
             data = {
