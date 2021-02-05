@@ -78,26 +78,30 @@ app.post('/getProductDetails', async function(req, res) {
     await page.goto(url)
     await page.waitForSelector('body');
 
-    const productDetails = await page.evaluate(() => {
-        const productTitle = document.body.querySelector('#productTitle').innerText;
-        var currentPrice = document.body.querySelector('#priceblock_ourprice').innerText;
-        const imageUrl = document.body.querySelector('#landingImage').innerText;
-        const youSave = document.body.querySelector('#regularprice_savings').innerText;
+    try {
+        const productDetails = await page.evaluate(() => {
+            const productTitle = document.body.querySelector('#productTitle').innerText;
+            var currentPrice = document.body.querySelector('#priceblock_ourprice').innerText;
+            const imageUrl = document.body.querySelector('#landingImage').innerText;
+            const youSave = document.body.querySelector('#regularprice_savings').innerText;
 
-        if(currentPrice === "") {
-            currentPrice = document.body.querySelector('#priceblock_dealprice').innerText;
-        } 
+            if(currentPrice === "") {
+                currentPrice = document.body.querySelector('#priceblock_dealprice').innerText;
+            } 
 
-        const data = {
-            productTitle, 
-            currentPrice,
-            imageUrl,
-            youSave
-        }
+            const data = {
+                productTitle, 
+                currentPrice,
+                imageUrl,
+                youSave
+            }
 
-        console.log(data)
-        res.send(data)
-    })
+            console.log(data)
+            res.send(data)
+        })
+    catch(e) {
+        console.log(e)
+    }
 
     browser.close()
 })
