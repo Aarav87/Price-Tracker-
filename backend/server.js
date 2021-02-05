@@ -74,10 +74,9 @@ app.post('/getProductDetails', async function(req, res) {
     var url = req.body.url
 
     const browser = await puppeteer.launch({args: ["--no-sandbox"]})
-
-    var data = {}
     
     try {
+        var data = {}
         var page = await browser.newPage()
         await page.goto(url)
 
@@ -97,14 +96,15 @@ app.post('/getProductDetails', async function(req, res) {
                 imageUrl,
                 youSave
             }
-
-            console.log(data)
         })
+
+        console.log(data)
+        res.send(data)
+        
     } catch(e) {
         console.log(e)
     }
     
-    res.send(data)
     browser.close()
 })
 
