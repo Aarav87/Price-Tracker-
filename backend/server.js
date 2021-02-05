@@ -99,6 +99,7 @@ app.post('/getProductDetails', async function(req, res) {
             console.log(data)
             res.send(data)
         })
+    }
     catch(e) {
         console.log(e)
     }
