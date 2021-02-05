@@ -82,11 +82,17 @@ app.post('/getProductDetails', async function(req, res) {
             const productTitle = document.querySelector('#productTitle').innerText;
             var currentPrice = document.querySelector('#priceblock_ourprice').innerText;
             const imageUrl = document.querySelector('#landingImage').src
-            const youSave = document.querySelector('#regularprice_savings').innerText
+            var youSave = document.querySelector('#regularprice_savings')
             
             if(currentPrice === "") {
                 currentPrice = document.body.querySelector('#priceblock_dealprice').innerText
             } 
+
+            if(youSave != null) {
+                youSave = youSave.innerText
+            } else {
+                youSave = ""
+            }
 
             var data = {
                 productTitle, 
