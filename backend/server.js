@@ -82,24 +82,25 @@ app.post('/getProductDetails', async function(req, res) {
         await page.goto(url)
 
         const productDetails = await page.evaluate(() => {
-            const productTitle = document.querySelector('#productTitle').textContent
-            var currentPrice = document.querySelector('#priceblock_ourprice').textContent
-            const imageUrl = document.querySelector('#landingImage').textContent
-            const youSave = document.querySelector('#regularprice_savings').textContent
+            const productTitle = document.querySelector('#productTitle')
+            var currentPrice = document.querySelector('#priceblock_ourprice')
+            const imageUrl = document.querySelector('#landingImage')
+            const youSave = document.querySelector('#regularprice_savings')
 
             if(currentPrice === "") {
-                currentPrice = document.querySelectorAll('#priceblock_dealprice').textContent
+                currentPrice = document.querySelectorAll('#priceblock_dealprice')
             } 
 
-            data = {
+            const data = {
                 productTitle, 
                 currentPrice,
                 imageUrl,
                 youSave
             }
+
+            console.log(data)
         })
 
-        console.log(data)
         res.send(data)
 
     } catch(e) {
