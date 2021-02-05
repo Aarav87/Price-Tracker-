@@ -73,13 +73,13 @@ app.post('/updateList', function(req, res) {
 app.post('/getProductDetails', async function(req, res) {
     var url = req.body.url
 
-    const browser = await puppeteer.launch({headless: true, args: ["--no-sandbox"]})
-    var page = await browser.newPage()
-    await page.goto(url)
-    await page.waitForSelector('body');
-
     try {
-        const productDetails = await page.evaluate(res => {
+        const browser = await puppeteer.launch({headless: true, args: ["--no-sandbox"]})
+        const page = await browser.newPage()
+        await page.goto(url)
+        let data = {}
+
+        const productDetails = await page.evaluate(() => {
             const productTitle = document.querySelector('#productTitle').innerText;
             var currentPrice = document.querySelector('#priceblock_ourprice').innerText;
             const imageUrl = document.querySelector('#landingImage')
@@ -89,16 +89,16 @@ app.post('/getProductDetails', async function(req, res) {
                 currentPrice = document.body.querySelector('#priceblock_dealprice')
             } 
 
-            const data = {
+            data = {
                 productTitle, 
                 currentPrice,
                 imageUrl,
                 youSave
             }
-
-            console.log(data)
-            res.send(data)
         })
+
+        console.log(data)
+        res.send(data)
     }
     catch(e) {
         console.log(e)
