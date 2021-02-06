@@ -213,9 +213,9 @@ function checkPrice() {
                                     priceHistory: priceHistory,
                                     dateRecorded: dateRecorded,
                                     youSave: productDetails.youSave 
-                                }).catch(error) {
+                                }).catch(error => {
                                     console.log(error)
-                                }
+                                })
                             }       
                         }, 10000)    
                     })
