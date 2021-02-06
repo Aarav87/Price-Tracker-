@@ -37,7 +37,7 @@ export default class ProductList extends Component {
         const productTitle = this.state.list.productTitle.replace('/', ' ')
 
         const data = {
-            productTitle
+            productTitle: productTitle
         }
 
         axios.post(`${process.env.REACT_APP_BACKEND_URL}/deleteProduct`, data)

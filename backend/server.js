@@ -105,7 +105,6 @@ app.post('/getProductDetails', async function(req, res) {
            return data
         })
 
-        console.log(productDetails)
         res.send(productDetails)
         browser.close()
     }
@@ -154,11 +153,10 @@ app.post('/saveChanges', function(req, res) {
 })
 
 app.post('/deleteProduct', function(req, res) {
-    const data = {
-        productTitle: req.body.productTitle
-    }
+    const productTitle = req.body.productTitle
+    
 
-    var ref = db.collection('users').doc(user.email).collection('products').doc(data.productTitle)
+    var ref = db.collection('users').doc(user.email).collection('products').doc(productTitle)
     ref.delete() 
         
 })
@@ -177,61 +175,70 @@ function checkPrice() {
                 if(Array.isArray(items) || !items === null) {
                     items.forEach(item => {
                         const url = item.url
+                        const browser = await puppeteer.launch({headless: true, args: ["--no-sandbox"]})
+                        
+                        try {
+                            setInterval(() => {                               
+                                const page = await browser.newPage()
+                                await page.goto(url)
 
-                        setInterval(() => {
-                           puppeteer
-                                .launch({
-                                    headless: true,
-                                    args: ["--no-sandbox"]
-                                })
-                                .then(function(browser) {
-                                    return browser.newPage();
-                                })
-                                .then(function(page) {
-                                    return page.goto(url).then(function() {
-                                        return page.content();
-                                    });
-                                })
-                                .then(function(html) {
-                                    var $ = cheerio.load(html);
-                                    const productTitle = $('#titleSection').text().replace(/\s\s+/g, '')
-                                    var currentPrice = $('#priceblock_ourprice').text().replace(/\s\s+/g, '')
-                                    const imageUrl = $('#landingImage').attr("data-old-hires")
-                                    const youSave = $('#regularprice_savings').text().replace(/\s\s+/g, '')
-                                
+                                const productDetails = await page.evaluate(() => {
+                                    const productTitle = document.querySelector('#productTitle').innerText;
+                                    var currentPrice = document.querySelector('#priceblock_ourprice').innerText;
+                                    const imageUrl = document.querySelector('#landingImage').src
+                                    var youSave = document.querySelector('#regularprice_savings')
+                                    
                                     if(currentPrice === "") {
-                                        currentPrice = $('#priceblock_dealprice').text().replace(/\s\s+/g, '')
+                                        currentPrice = document.body.querySelector('#priceblock_dealprice').innerText
                                     } 
-      
-                                    const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
-                                    const today = new Date();
-                                    const dd = String(today.getDate())
-                                    const mm = String(today.getMonth())
-                                    const date = `${months[mm]} ${dd}`
 
-                                    const priceHistory = item.priceHistory
-                                    const dateRecorded = item.dateRecorded  
+                                    if(youSave != null) {
+                                        youSave = youSave.innerText
+                                    } else {
+                                        youSave = ""
+                                    }
 
-                                    if(dateRecorded[dateRecorded.length - 1] != date) {
-                                        priceHistory.push(currentPrice)
-                                        dateRecorded.push(date)
-                                        
-                                        var ref = db.collection('users').doc(user.email).collection('products').doc(docID)
-                                        ref.update({
-                                            url: data.url,
-                                            productTitle: productTitle,
-                                            currentProductPrice: currentProductPrice,
-                                            imageUrl: imageUrl,
-                                            priceHistory: priceHistory,
-                                            dateRecorded: dateRecorded,
-                                            youSave: youSave 
-                                        })
-                                    } 
-                            })
-                            .catch((error) => {
-                                console.log(error)
-                            })
-                        }, 5000);
+                                    var data = {
+                                        productTitle, 
+                                        currentPrice,
+                                        imageUrl,
+                                        youSave
+                                    }
+
+                                    return data
+                        
+                                })
+
+                                const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+                                const today = new Date();
+                                const dd = String(today.getDate())
+                                const mm = String(today.getMonth())
+                                const date = `${months[mm]} ${dd}`
+
+                                const priceHistory = item.priceHistory
+                                const dateRecorded = item.dateRecorded  
+
+                                if(dateRecorded[dateRecorded.length - 1] != date) {
+                                    priceHistory.push(currentPrice)
+                                    dateRecorded.push(date)
+                                    
+                                    var ref = db.collection('users').doc(user.email).collection('products').doc(docID)
+                                    ref.update({
+                                        url: data.url,
+                                        productTitle: productDetails.productTitle,
+                                        currentProductPrice: productDetails.currentPrice,
+                                        imageUrl: productDetails.imageUrl,
+                                        priceHistory: priceHistory,
+                                        dateRecorded: dateRecorded,
+                                        youSave: productDetails.youSave 
+                                    })
+                                  }       
+                            }, 5000)
+                        } catch(e) {
+                            console.log(e)
+                        }
+
+                        browser.close()
                     })
                 } 
             })
