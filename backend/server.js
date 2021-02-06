@@ -53,32 +53,15 @@ let transporter = nodemailer.createTransport({
     }
 });
 
-app.post('/onAuthStateChanged', function(req, res) {
-    user = req.body
-})
-
-app.post('/updateList', function(req, res) {
-    db.collection(`/users/${user.email}/products`)
-      .get()
-      .then(snapshot => {
-        const items = []
-        snapshot.forEach(document => {
-          const data = document.data();
-          items.push(data);
-        });
-        res.send(items)
-      })
-})
-
-app.post('/getProductDetails', async function(req, res) {
-    var url = req.body.url
+async function getProductDetails(url) {
+    var productDetails = {}
 
     try {
         const browser = await puppeteer.launch({headless: true, args: ["--no-sandbox"]})
         const page = await browser.newPage()
         await page.goto(url)
 
-        const productDetails = await page.evaluate(() => {
+        const getProductDetails = await page.evaluate(() => {
             const productTitle = document.querySelector('#productTitle').innerText;
             var currentPrice = document.querySelector('#priceblock_ourprice').innerText;
             const imageUrl = document.querySelector('#landingImage').src
@@ -105,12 +88,37 @@ app.post('/getProductDetails', async function(req, res) {
            return data
         })
 
-        res.send(productDetails)
+        productDetails = getProductDetails
         browser.close()
     }
     catch(e) {
         console.log(e)
     }
+
+    console.log(productDetails)
+    return productDetails
+}
+
+app.post('/onAuthStateChanged', function(req, res) {
+    user = req.body
+})
+
+app.post('/updateList', function(req, res) {
+    db.collection(`/users/${user.email}/products`)
+      .get()
+      .then(snapshot => {
+        const items = []
+        snapshot.forEach(document => {
+          const data = document.data();
+          items.push(data);
+        });
+        res.send(items)
+      })
+})
+
+app.post('/getProductDetails', async function(req, res) {
+    var url = req.body.url
+    getProductDetails(url)
 })
 
 app.post('/addProduct', function(req, res) {
@@ -161,7 +169,7 @@ app.post('/deleteProduct', function(req, res) {
         
 })
 
-function checkPrice() {
+async function checkPrice() {
     if(user) {
         db.collection(`/users/${user.email}/products`)
             .get()
@@ -173,41 +181,11 @@ function checkPrice() {
                 });
 
                 if(Array.isArray(items) || !items === null) {
-                    items.forEach(async item => {
+                    items.forEach(item => {
                         const url = item.url
-                        const browser = await puppeteer.launch({headless: true, args: ["--no-sandbox"]})
-                        
-                        try {
+    
                             setInterval(() => {                               
-                                const page = await browser.newPage()
-                                await page.goto(url)
-
-                                const productDetails = await page.evaluate(() => {
-                                    const productTitle = document.querySelector('#productTitle').innerText;
-                                    var currentPrice = document.querySelector('#priceblock_ourprice').innerText;
-                                    const imageUrl = document.querySelector('#landingImage').src
-                                    var youSave = document.querySelector('#regularprice_savings')
-                                    
-                                    if(currentPrice === "") {
-                                        currentPrice = document.body.querySelector('#priceblock_dealprice').innerText
-                                    } 
-
-                                    if(youSave != null) {
-                                        youSave = youSave.innerText
-                                    } else {
-                                        youSave = ""
-                                    }
-
-                                    var data = {
-                                        productTitle, 
-                                        currentPrice,
-                                        imageUrl,
-                                        youSave
-                                    }
-
-                                    return data
-                        
-                                })
+                                getProductDetails(url)
 
                                 const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
                                 const today = new Date();
@@ -233,10 +211,7 @@ function checkPrice() {
                                         youSave: productDetails.youSave 
                                     })
                                   }       
-                            }, 5000)
-                        } catch(e) {
-                            console.log(e)
-                        }
+                            }, 5000)    
 
                         browser.close()
                     })
