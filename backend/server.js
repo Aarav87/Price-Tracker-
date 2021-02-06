@@ -161,7 +161,7 @@ app.post('/deleteProduct', function(req, res) {
         
 })
 
-function checkPrice() {
+async function checkPrice() {
     if(user) {
         db.collection(`/users/${user.email}/products`)
             .get()
