@@ -204,20 +204,21 @@ function checkPrice() {
                                 priceHistory.push(productDetails.currentPrice)
                                 dateRecorded.push(date)
                                 
-                                var ref = db.collection('users').doc(user.email).collection('products').doc(docID)
-                                console.log(productDetails)
-                                ref.update({
-                                    productTitle: productDetails.productTitle,
-                                    currentProductPrice: productDetails.currentPrice,
-                                    imageUrl: productDetails.imageUrl,
-                                    priceHistory: priceHistory,
-                                    dateRecorded: dateRecorded,
-                                    youSave: productDetails.youSave 
-                                }).catch(error => {
-                                    console.log(error)
-                                })
+                                setTimeout(() => {
+                                    var ref = db.collection('users').doc(user.email).collection('products').doc(docID)
+                                    ref.update({
+                                        productTitle: productDetails.productTitle,
+                                        currentProductPrice: productDetails.currentPrice,
+                                        imageUrl: productDetails.imageUrl,
+                                        priceHistory: priceHistory,
+                                        dateRecorded: dateRecorded,
+                                        youSave: productDetails.youSave 
+                                    }).catch(error => {
+                                        console.log(error)
+                                    })
+                                }, 3000)
                             }       
-                        }, 10000)    
+                        }, 20000)    
                     })
                 } 
             })
