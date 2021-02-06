@@ -206,6 +206,7 @@ function checkPrice() {
                                     var ref = db.collection('users').doc(user.email).collection('products').doc(docID)
                                     
                                     setTimeout(() => {
+                                        console.log(productDetails)
                                         ref.update({
                                             url: data.url,
                                             productTitle: productDetails.productTitle,
@@ -215,7 +216,7 @@ function checkPrice() {
                                             dateRecorded: dateRecorded,
                                             youSave: productDetails.youSave 
                                         })
-                                    })
+                                    }, 2000)
                                   }       
                             }, 10000)    
                     })
