@@ -118,8 +118,10 @@ app.post('/updateList', function(req, res) {
 app.post('/getProductDetails', async function(req, res) {
     var url = req.body.url
     const productDetails = await getProductDetails(url)
-    console.log(productDetails)
-    res.send(productDetails)
+    
+    setTimeout(() => {
+        res.send(productDetails)
+    }, 3000)
 })
 
 app.post('/addProduct', function(req, res) {
