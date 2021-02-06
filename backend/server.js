@@ -188,8 +188,7 @@ function checkPrice() {
                     items.forEach(item => {
                         const url = item.url
     
-                        setInterval(async() => { 
-                            console.log(url)                              
+                        setInterval(async() => {                      
                             const productDetails = await getProductDetails(url)
 
                             const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
@@ -214,7 +213,9 @@ function checkPrice() {
                                     priceHistory: priceHistory,
                                     dateRecorded: dateRecorded,
                                     youSave: productDetails.youSave 
-                                })
+                                }).catch(error) {
+                                    console.log(error)
+                                }
                             }       
                         }, 10000)    
                     })
