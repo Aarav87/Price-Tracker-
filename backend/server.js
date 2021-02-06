@@ -172,7 +172,7 @@ app.post('/deleteProduct', function(req, res) {
         
 })
 
-async function checkPrice() {
+function checkPrice() {
     if(user) {
         console.log('check price running')
         db.collection(`/users/${user.email}/products`)
@@ -185,7 +185,7 @@ async function checkPrice() {
                 });
 
                 if(Array.isArray(items) || !items === null) {
-                    items.forEach(item => {
+                    items.forEach(async item => {
                         const url = item.url
 
                         const browser = await puppeteer.launch({headless: true, args: ["--no-sandbox"]})
