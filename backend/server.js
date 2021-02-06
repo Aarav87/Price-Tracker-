@@ -172,7 +172,7 @@ app.post('/deleteProduct', function(req, res) {
         
 })
 
-async function checkPrice() {
+function checkPrice() {
     if(user) {
         db.collection(`/users/${user.email}/products`)
             .get()
@@ -187,7 +187,7 @@ async function checkPrice() {
                     items.forEach(item => {
                         const url = item.url
     
-                            setInterval(() => {                               
+                            setInterval(async() => {                               
                                 const productDetails = await getProductDetails(url)
 
                                 const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
