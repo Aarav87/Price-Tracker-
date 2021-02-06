@@ -243,7 +243,7 @@ function checkPrice() {
                                 dateRecorded.push(date)
                                 
                                 setTimeout(() => {
-                                     var ref = db.collection('users').doc(user.email).collection('products').doc(item.productTitle)
+                                    var ref = db.collection('users').doc(user.email).collection('products').doc(item.productTitle)
                                     ref.update({
                                         productTitle: productDetails.productTitle,
                                         currentProductPrice: productDetails.currentPrice,
@@ -256,7 +256,7 @@ function checkPrice() {
                                     })
                                 }, 3000)
                             }       
-                        }, 5000)    
+                        }, 10000)    
                     })
                 } 
             })
