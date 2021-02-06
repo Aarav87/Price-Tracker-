@@ -187,9 +187,47 @@ function checkPrice() {
                 if(Array.isArray(items) || !items === null) {
                     items.forEach(item => {
                         const url = item.url
+
+                        const browser = await puppeteer.launch({headless: true, args: ["--no-sandbox"]})
     
-                        setInterval(async() => {                      
-                            const productDetails = await getProductDetails(url)
+                        setInterval(async() => {
+                            var productDetails = {}  
+
+                            try {
+                                const page = await browser.newPage()
+                                await page.goto(url)
+
+                                const getProductDetails = await page.evaluate(() => {
+                                    const productTitle = document.querySelector('#productTitle').innerText;
+                                    var currentPrice = document.querySelector('#priceblock_ourprice').innerText;
+                                    const imageUrl = document.querySelector('#landingImage').src
+                                    var youSave = document.querySelector('#regularprice_savings')
+                                    
+                                    if(currentPrice === "") {
+                                        currentPrice = document.body.querySelector('#priceblock_dealprice').innerText
+                                    } 
+
+                                    if(youSave != null) {
+                                        youSave = youSave.innerText
+                                    } else {
+                                        youSave = ""
+                                    }
+
+                                    var data = {
+                                        productTitle, 
+                                        currentPrice,
+                                        imageUrl,
+                                        youSave
+                                    }
+
+                                    return data   
+                                })
+
+                                productDetails = getProductDetails
+                            } 
+                            catch(e) {
+                                console.log(e)
+                            }
 
                             const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
                             const today = new Date();
@@ -204,19 +242,17 @@ function checkPrice() {
                                 priceHistory.push(productDetails.currentPrice)
                                 dateRecorded.push(date)
                                 
-                                setTimeout(() => {
-                                    var ref = db.collection('users').doc(user.email).collection('products').doc(docID)
-                                    ref.update({
-                                        productTitle: productDetails.productTitle,
-                                        currentProductPrice: productDetails.currentPrice,
-                                        imageUrl: productDetails.imageUrl,
-                                        priceHistory: priceHistory,
-                                        dateRecorded: dateRecorded,
-                                        youSave: productDetails.youSave 
-                                    }).catch(error => {
-                                        console.log(error)
-                                    })
-                                }, 3000)
+                                var ref = db.collection('users').doc(user.email).collection('products').doc(docID)
+                                ref.update({
+                                    productTitle: productDetails.productTitle,
+                                    currentProductPrice: productDetails.currentPrice,
+                                    imageUrl: productDetails.imageUrl,
+                                    priceHistory: priceHistory,
+                                    dateRecorded: dateRecorded,
+                                    youSave: productDetails.youSave 
+                                }).catch(error => {
+                                    console.log(error)
+                                })
                             }       
                         }, 5000)    
                     })
