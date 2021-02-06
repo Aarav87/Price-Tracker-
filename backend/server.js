@@ -187,38 +187,39 @@ function checkPrice() {
                     items.forEach(item => {
                         const url = item.url
     
-                            setInterval(async() => {                               
-                                const productDetails = await getProductDetails(url)
+                        setInterval(async() => { 
+                            console.log(url)                              
+                            const productDetails = await getProductDetails(url)
 
-                                const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
-                                const today = new Date();
-                                const dd = String(today.getDate())
-                                const mm = String(today.getMonth())
-                                const date = `${months[mm]} ${dd}`
+                            const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+                            const today = new Date();
+                            const dd = String(today.getDate())
+                            const mm = String(today.getMonth())
+                            const date = `${months[mm]} ${dd}`
 
-                                const priceHistory = item.priceHistory
-                                const dateRecorded = item.dateRecorded  
+                            const priceHistory = item.priceHistory
+                            const dateRecorded = item.dateRecorded  
 
-                                if(dateRecorded[dateRecorded.length - 1] != date) {
-                                    priceHistory.push(currentPrice)
-                                    dateRecorded.push(date)
-                                    
-                                    var ref = db.collection('users').doc(user.email).collection('products').doc(docID)
-                                    
-                                    setTimeout(() => {
-                                        console.log(productDetails)
-                                        ref.update({
-                                            url: data.url,
-                                            productTitle: productDetails.productTitle,
-                                            currentProductPrice: productDetails.currentPrice,
-                                            imageUrl: productDetails.imageUrl,
-                                            priceHistory: priceHistory,
-                                            dateRecorded: dateRecorded,
-                                            youSave: productDetails.youSave 
-                                        })
-                                    }, 2000)
-                                  }       
-                            }, 10000)    
+                            if(dateRecorded[dateRecorded.length - 1] != date) {
+                                priceHistory.push(currentPrice)
+                                dateRecorded.push(date)
+                                
+                                var ref = db.collection('users').doc(user.email).collection('products').doc(docID)
+                                
+                                setTimeout(() => {
+                                    console.log(productDetails)
+                                    ref.update({
+                                        url: data.url,
+                                        productTitle: productDetails.productTitle,
+                                        currentProductPrice: productDetails.currentPrice,
+                                        imageUrl: productDetails.imageUrl,
+                                        priceHistory: priceHistory,
+                                        dateRecorded: dateRecorded,
+                                        youSave: productDetails.youSave 
+                                    })
+                                }, 3000)
+                                }       
+                        }, 10000)    
                     })
                 } 
             })
