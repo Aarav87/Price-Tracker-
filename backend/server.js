@@ -174,6 +174,7 @@ app.post('/deleteProduct', function(req, res) {
 
 function checkPrice() {
     if(user) {
+        console.log('check price running')
         db.collection(`/users/${user.email}/products`)
             .get()
             .then(snapshot => {
@@ -207,7 +208,6 @@ function checkPrice() {
                                 var ref = db.collection('users').doc(user.email).collection('products').doc(docID)
                                 console.log(productDetails)
                                 ref.update({
-                                    url: data.url,
                                     productTitle: productDetails.productTitle,
                                     currentProductPrice: productDetails.currentPrice,
                                     imageUrl: productDetails.imageUrl,
