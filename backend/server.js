@@ -201,24 +201,21 @@ function checkPrice() {
                             const dateRecorded = item.dateRecorded  
 
                             if(dateRecorded[dateRecorded.length - 1] != date) {
-                                priceHistory.push(currentPrice)
+                                priceHistory.push(productDetails.currentPrice)
                                 dateRecorded.push(date)
                                 
                                 var ref = db.collection('users').doc(user.email).collection('products').doc(docID)
-                                
-                                setTimeout(() => {
-                                    console.log(productDetails)
-                                    ref.update({
-                                        url: data.url,
-                                        productTitle: productDetails.productTitle,
-                                        currentProductPrice: productDetails.currentPrice,
-                                        imageUrl: productDetails.imageUrl,
-                                        priceHistory: priceHistory,
-                                        dateRecorded: dateRecorded,
-                                        youSave: productDetails.youSave 
-                                    })
-                                }, 3000)
-                                }       
+                                console.log(productDetails)
+                                ref.update({
+                                    url: data.url,
+                                    productTitle: productDetails.productTitle,
+                                    currentProductPrice: productDetails.currentPrice,
+                                    imageUrl: productDetails.imageUrl,
+                                    priceHistory: priceHistory,
+                                    dateRecorded: dateRecorded,
+                                    youSave: productDetails.youSave 
+                                })
+                            }       
                         }, 10000)    
                     })
                 } 
