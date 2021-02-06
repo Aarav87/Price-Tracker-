@@ -242,7 +242,7 @@ function checkPrice() {
                                 priceHistory.push(productDetails.currentPrice)
                                 dateRecorded.push(date)
                                 
-                                var ref = db.collection('users').doc(user.email).collection('products').doc(docID)
+                                var ref = db.collection('users').doc(user.email).collection('products').doc(item.productTitle)
                                 ref.update({
                                     productTitle: productDetails.productTitle,
                                     currentProductPrice: productDetails.currentPrice,
