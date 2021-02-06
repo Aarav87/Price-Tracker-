@@ -172,7 +172,7 @@ app.post('/deleteProduct', function(req, res) {
         
 })
 
-async function checkPrice() {
+function checkPrice() {
     if(user) {
         db.collection(`/users/${user.email}/products`)
             .get()
@@ -188,7 +188,7 @@ async function checkPrice() {
                         const url = item.url
     
                             setInterval(() => {                               
-                                getProductDetails(url)
+                                const productDetails = await getProductDetails(url)
 
                                 const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
                                 const today = new Date();
@@ -204,19 +204,20 @@ async function checkPrice() {
                                     dateRecorded.push(date)
                                     
                                     var ref = db.collection('users').doc(user.email).collection('products').doc(docID)
-                                    ref.update({
-                                        url: data.url,
-                                        productTitle: productDetails.productTitle,
-                                        currentProductPrice: productDetails.currentPrice,
-                                        imageUrl: productDetails.imageUrl,
-                                        priceHistory: priceHistory,
-                                        dateRecorded: dateRecorded,
-                                        youSave: productDetails.youSave 
+                                    
+                                    setTimeout(() => {
+                                        ref.update({
+                                            url: data.url,
+                                            productTitle: productDetails.productTitle,
+                                            currentProductPrice: productDetails.currentPrice,
+                                            imageUrl: productDetails.imageUrl,
+                                            priceHistory: priceHistory,
+                                            dateRecorded: dateRecorded,
+                                            youSave: productDetails.youSave 
+                                        })
                                     })
                                   }       
-                            }, 5000)    
-
-                        browser.close()
+                            }, 10000)    
                     })
                 } 
             })
@@ -268,7 +269,7 @@ function priceMet() {
     }
 }
 
-setInterval(checkPrice, 77760000)
-setInterval(priceMet, 86400000)
+setInterval(checkPrice, 1800000)
+setInterval(priceMet, 3600000)
 
 app.listen(PORT);
