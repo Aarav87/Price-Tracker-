@@ -95,7 +95,6 @@ async function getProductDetails(url) {
         console.log(e)
     }
 
-    console.log(productDetails)
     return productDetails
 }
 
@@ -119,6 +118,7 @@ app.post('/updateList', function(req, res) {
 app.post('/getProductDetails', async function(req, res) {
     var url = req.body.url
     const productDetails = getProductDetails(url)
+    console.log(productDetails)
     res.send(productDetails)
 })
 
