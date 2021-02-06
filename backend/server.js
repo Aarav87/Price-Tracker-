@@ -118,7 +118,8 @@ app.post('/updateList', function(req, res) {
 
 app.post('/getProductDetails', async function(req, res) {
     var url = req.body.url
-    getProductDetails(url)
+    const productDetails = getProductDetails(url)
+    res.send(productDetails)
 })
 
 app.post('/addProduct', function(req, res) {
