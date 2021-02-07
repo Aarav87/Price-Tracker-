@@ -187,7 +187,6 @@ function checkPrice() {
                 if(Array.isArray(items) || !items === null) {
                     items.forEach(async item => {
                         const url = item.url
-
                         const browser = await puppeteer.launch({headless: true, args: ["--no-sandbox"]})
     
                         setInterval(async() => {
@@ -254,9 +253,9 @@ function checkPrice() {
                                     }).catch(error => {
                                         console.log(error)
                                     })
-                                }, 3000)
+                                }, 2000)
                             }       
-                        }, 10000)    
+                        }, 5000)    
                     })
                 } 
             })
