@@ -253,7 +253,7 @@ function checkPrice() {
                                     }).catch(error => {
                                         console.log(error)
                                     })
-                                }, 2000)
+                                }, 3000)
                             }       
                         }, 5000)    
                     })
