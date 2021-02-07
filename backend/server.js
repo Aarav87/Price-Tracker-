@@ -187,12 +187,12 @@ function checkPrice() {
                 if(Array.isArray(items) || !items === null) {
                     items.forEach(async item => {
                         const url = item.url
-                        const browser = await puppeteer.launch({headless: true, args: ["--no-sandbox"]})
     
                         setInterval(async() => {
                             var productDetails = {}  
 
                             try {
+                                const browser = await puppeteer.launch({headless: true, args: ["--no-sandbox"]})
                                 const page = await browser.newPage()
                                 await page.goto(url)
 
@@ -223,6 +223,7 @@ function checkPrice() {
                                 })
 
                                 productDetails = getProductDetails
+                                browser.close()
                             } 
                             catch(e) {
                                 console.log(e)
@@ -255,7 +256,7 @@ function checkPrice() {
                                     })
                                 }, 3000)
                             }       
-                        }, 7000)    
+                        }, 5000)    
                     })
                 } 
             })
