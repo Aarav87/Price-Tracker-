@@ -172,12 +172,12 @@ app.post('/deleteProduct', function(req, res) {
         
 })
 
-async function checkPrice() {
+function checkPrice() {
     if(user) {
         console.log('check price running')
         db.collection(`/users/${user.email}/products`)
             .get()
-            .then(snapshot => {
+            .then(async snapshot => {
                 const items = [];
                 snapshot.forEach(document => {
                     const data = document.data();
