@@ -185,10 +185,10 @@ function checkPrice() {
 
                 const productDetails = async items => {
                     if(Array.isArray(items) || !items === null) {
-                        console.log('check price running')
+                        console.log(items)
                         const browser = await puppeteer.launch({headless: true, args: ["--no-sandbox"]})
                         
-                        items.forEach(item => {
+                        items.forEach(async item => {
                             const url = item.url
                             var productDetails = {}  
 
