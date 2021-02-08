@@ -264,7 +264,7 @@ function checkPrice() {
                     } 
                 }
 
-                getProductDetails()
+                getProductDetails(items)
             })
     }
 }
