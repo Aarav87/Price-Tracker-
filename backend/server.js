@@ -190,74 +190,69 @@ function checkPrice() {
                         
                         items.forEach(item => {
                             const url = item.url
+                            var productDetails = {}  
 
-                            setInterval(async() => {
-                                var productDetails = {}  
+                            try {
+                                const page = await browser.newPage()
+                                await page.goto(url)
 
-                                try {
-                                    const page = await browser.newPage()
-                                    await page.goto(url)
-
-                                    const getProductDetails = await page.evaluate(() => {
-                                        const productTitle = document.querySelector('#productTitle').innerText;
-                                        var currentPrice = document.querySelector('#priceblock_ourprice').innerText;
-                                        const imageUrl = document.querySelector('#landingImage').src
-                                        var youSave = document.querySelector('#regularprice_savings')
-                                        
-                                        if(currentPrice === "") {
-                                            currentPrice = document.body.querySelector('#priceblock_dealprice').innerText
-                                        } 
-
-                                        if(youSave != null) {
-                                            youSave = youSave.innerText
-                                        } else {
-                                            youSave = ""
-                                        }
-
-                                        var data = {
-                                            productTitle, 
-                                            currentPrice,
-                                            imageUrl,
-                                            youSave
-                                        }
-
-                                        return data   
-                                    })
-
-                                    productDetails = getProductDetails
-                                } 
-                                catch(e) {
-                                    console.log(e)
-                                }
-
-                                const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
-                                const today = new Date();
-                                const dd = String(today.getDate())
-                                const mm = String(today.getMonth())
-                                const date = `${months[mm]} ${dd}`
-
-                                const priceHistory = item.priceHistory
-                                const dateRecorded = item.dateRecorded  
-
-                                if(dateRecorded[dateRecorded.length - 1] != date) {
-                                    priceHistory.push(productDetails.currentPrice)
-                                    dateRecorded.push(date)
+                                const getProductDetails = await page.evaluate(() => {
+                                    const productTitle = document.querySelector('#productTitle').innerText;
+                                    var currentPrice = document.querySelector('#priceblock_ourprice').innerText;
+                                    const imageUrl = document.querySelector('#landingImage').src
+                                    var youSave = document.querySelector('#regularprice_savings')
                                     
-                                    setTimeout(() => {
-                                        var ref = db.collection('users').doc(user.email).collection('products').doc(item.productTitle)
-                                        ref.update({
-                                            productTitle: productDetails.productTitle,
-                                            currentProductPrice: productDetails.currentPrice,
-                                            imageUrl: productDetails.imageUrl,
-                                            priceHistory: priceHistory,
-                                            dateRecorded: dateRecorded,
-                                            youSave: productDetails.youSave 
-                                        }).catch(error => {
-                                            console.log(error)
-                                        })
-                                    }, 3000)
-                                }       
-                            }, 5000)    
+                                    if(currentPrice === "") {
+                                        currentPrice = document.body.querySelector('#priceblock_dealprice').innerText
+                                    } 
+
+                                    if(youSave != null) {
+                                        youSave = youSave.innerText
+                                    } else {
+                                        youSave = ""
+                                    }
+
+                                    var data = {
+                                        productTitle, 
+                                        currentPrice,
+                                        imageUrl,
+                                        youSave
+                                    }
+
+                                    return data   
+                                })
+
+                                productDetails = getProductDetails
+                            } 
+                            catch(e) {
+                                console.log(e)
+                            }
+
+                            const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+                            const today = new Date();
+                            const dd = String(today.getDate())
+                            const mm = String(today.getMonth())
+                            const date = `${months[mm]} ${dd}`
+
+                            const priceHistory = item.priceHistory
+                            const dateRecorded = item.dateRecorded  
+
+                            if(dateRecorded[dateRecorded.length - 1] != date) {
+                                priceHistory.push(productDetails.currentPrice)
+                                dateRecorded.push(date)
+                                
+                                var ref = db.collection('users').doc(user.email).collection('products').doc(item.productTitle)
+                                ref.update({
+                                    productTitle: productDetails.productTitle,
+                                    currentProductPrice: productDetails.currentPrice,
+                                    imageUrl: productDetails.imageUrl,
+                                    priceHistory: priceHistory,
+                                    dateRecorded: dateRecorded,
+                                    youSave: productDetails.youSave 
+                                }).catch(error => {
+                                    console.log(error)
+                                })
+                            }       
                         })
 
                         browser.close()
