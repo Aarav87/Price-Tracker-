@@ -47,24 +47,18 @@ class App extends Component {
   }
   
   componentDidMount() {
-    if(window.location.href.slice(0, 22) === "https://www.amazon.ca/") {
-      auth.onAuthStateChanged((user) => {      
-        if (user) {
-          this.setState({ user })
-          setTimeout(this.updateList, 6000)
-        } else {
-          this.setState({
-            user: null,
-            loading: false
-          })
-        }
-
-        setTimeout(() => {
-          axios.post(`${process.env.REACT_APP_BACKEND_URL}/onAuthStateChanged`, this.state.user)
-        }, 3000);
-      })
-    }
-  }
+    auth.onAuthStateChanged((user) => {      
+      if (user) {
+        this.setState({ user })
+        setTimeout(this.updateList, 6000)
+      } else {
+        this.setState({
+          user: null,
+          loading: false
+        })
+      }
+  })
+}
 
   updateList() {
     axios.post(`${process.env.REACT_APP_BACKEND_URL}/updateList`)

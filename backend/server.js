@@ -53,8 +53,18 @@ let transporter = nodemailer.createTransport({
     }
 });
 
-app.post('/onAuthStateChanged', function(req, res) {
-    user = req.body
+app.post('/onLogin', function(req, res) {
+    const email = req.body.email
+
+    auth
+        .getUserByEmail(email)
+        .then((userRecord) => {
+            user = userRecord.toJSON()
+            console.log(user)
+        })
+        .catch((error) => {
+            console.log('Error fetching user data:', error);
+        });
 })
 
 app.post('/updateList', function(req, res) {
