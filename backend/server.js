@@ -184,7 +184,7 @@ function checkPrice() {
                     items.push(data);
                 });
 
-                const getProductDetails = async () => {
+                const getProductDetails = async items => {
                     if(Array.isArray(items) || !items === null) {
                         const browser = await puppeteer.launch({headless: true, args: ["--no-sandbox"]})
                         
