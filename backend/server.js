@@ -53,6 +53,23 @@ let transporter = nodemailer.createTransport({
     }
 });
 
+app.post('/onAuthStateChanged', function(req, res) {
+    user = req.body
+})
+
+app.post('/updateList', function(req, res) {
+    db.collection(`/users/${user.email}/products`)
+      .get()
+      .then(snapshot => {
+        const items = []
+        snapshot.forEach(document => {
+          const data = document.data();
+          items.push(data);
+        });
+        res.send(items)
+      })
+})
+
 async function getProductDetails(url) {
     var productDetails = {}
 
@@ -98,27 +115,9 @@ async function getProductDetails(url) {
     return productDetails
 }
 
-app.post('/onAuthStateChanged', function(req, res) {
-    user = req.body
-})
-
-app.post('/updateList', function(req, res) {
-    db.collection(`/users/${user.email}/products`)
-      .get()
-      .then(snapshot => {
-        const items = []
-        snapshot.forEach(document => {
-          const data = document.data();
-          items.push(data);
-        });
-        res.send(items)
-      })
-})
-
 app.post('/getProductDetails', async function(req, res) {
     var url = req.body.url
     const productDetails = await getProductDetails(url)
-    console.log(productDetails)
     
     setTimeout(() => {
         res.send(productDetails)
