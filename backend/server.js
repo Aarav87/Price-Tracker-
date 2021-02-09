@@ -182,8 +182,9 @@ app.post('/deleteProduct', function(req, res) {
         
 })
 
-async function updateProductDetails(url, item) {
-    const productDetails = await getProductDetails(url)
+async function updateProductDetails(item) {
+    console.log(item)
+    const productDetails = await getProductDetails(item.url)
 
     const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
     const today = new Date();
@@ -227,8 +228,7 @@ function checkPrice() {
 
                 if(Array.isArray(items) || !items === null) {
                     items.forEach(item => {
-                        const url = item.url
-                        updateProductDetails(url, item)
+                        updateProductDetails(item)
                     })
                 } 
             })
