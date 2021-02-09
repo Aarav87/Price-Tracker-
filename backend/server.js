@@ -131,7 +131,7 @@ app.post('/getProductDetails', async function(req, res) {
     
     setTimeout(() => {
         res.send(productDetails)
-    }, 3000)
+    }, 2000)
 })
 
 app.post('/addProduct', function(req, res) {
@@ -211,7 +211,7 @@ async function updateProductDetails(item) {
             }).catch(error => {
                 console.log(error)
             })
-        }, 3000)
+        }, 2000)
     }       
 }
 
