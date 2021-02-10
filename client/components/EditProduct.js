@@ -81,17 +81,19 @@ export default class EditProduct extends Component {
         return(
             <div style={{position: 'fixed', top: 0, bottom: 0, left: 0, right: 0, backgroundColor: '#fff', width: '100%', height: 800, fontFamily: 'Verdana, Geneva, sans-serif'}}>
                 <div style={{paddingTop: '3px'}}>
-                    <img style={{height: '75px', width: '125px', padding: '10px', float: 'left'}} src={this.state.list.imageUrl} />
-                    <h1 style={{fontSize: '15px', paddingTop: '7px', paddingLeft: '150px', textDecoration: 'none'}}>{this.state.list.productTitle.slice(0, 37)}...</h1>
-                    <p style={{paddingLeft: '150px'}}>Current Price: {this.state.list.currentProductPrice.replace(/\s+/g, '')}</p>
-                    <p style={{position: 'fixed', top: '75px', paddingLeft: '150px'}}>Desired Price: CDN${this.state.desired_price}</p>
-                    <hr style={{border: 'none', borderBottom: '1px solid #000000', width: '90%', paddingTop: '15px'}} /> 
+                    <a style={{textDecoration: 'none'}} href={this.state.list.url} target="_blank">
+                        <img style={{height: '75px', width: '125px', padding: '10px', float: 'left'}} src={this.state.list.imageUrl} />
+                        <h1 style={{fontSize: '15px', paddingTop: '7px', paddingLeft: '150px', textDecoration: 'none'}}>{this.state.list.productTitle.slice(0, 37)}...</h1>
+                        <p style={{paddingLeft: '150px'}}>Current Price: {this.state.list.currentProductPrice.replace(/\s+/g, '')}</p>
+                    </a>
+                    <div style={{paddingLeft: '150px'}}>
+                        <input style={{width: '200px'}} type="number" min="0" value={this.state.desired_price} placeholder="Desired Price" readonly="true"/> 
+                    </div>
+                    <hr style={{border: 'none', borderBottom: '1px solid #000000', width: '90%', paddingTop: '5px'}} /> 
                 </div>
                 <div style={{backgroundColor: '#fff', paddingLeft: '150px', height: '100px'}}>
-                    <p style={{position: 'fixed', left: '30px', top: '120px'}}>Product URL</p>
-                    <input style={{width: '200px'}} type="text" name="url" value={this.state.list.url} readonly="true" /> 
-                    <p style={{position: 'fixed', left: '30px', top: '140px'}}>Desired Price</p>
-                    <input style={{width: '200px'}} type="number" name="desired_price" maxlength={this.state.list.desired_price.slice(5, this.state.list.desired_price.length).length} value={this.state.desired_price} onChange={this.onChange} />
+                    <p style={{position: 'fixed', left: '20px'}}>Desired Price</p>
+                    <input style={{width: '200px'}} type="number" name="desired_price" maxlength={this.state.list.desired_price.slice(4, this.state.list.desired_price.length).length} value={this.state.desired_price} onChange={this.onChange} />
                 </div>
                 <div style={{width: '93%', position: 'fixed', left: '25px', top: '190px'}}>
                     <Line 
