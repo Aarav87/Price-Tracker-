@@ -183,7 +183,6 @@ app.post('/deleteProduct', function(req, res) {
 })
 
 async function updateProductDetails(item) {
-    console.log(item)
     const productDetails = await getProductDetails(item.url)
 
     const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
@@ -191,6 +190,7 @@ async function updateProductDetails(item) {
     const dd = String(today.getDate())
     const mm = String(today.getMonth())
     const date = `${months[mm]} ${dd}`
+    console.log(date)
 
     const priceHistory = item.priceHistory
     const dateRecorded = item.dateRecorded  
@@ -198,20 +198,18 @@ async function updateProductDetails(item) {
     if(dateRecorded[dateRecorded.length - 1] != date) {
         priceHistory.push(productDetails.currentPrice)
         dateRecorded.push(date)
-        
-        setTimeout(() => {
-            var ref = db.collection('users').doc(user.email).collection('products').doc(item.productTitle)
-            ref.update({
-                productTitle: productDetails.productTitle,
-                currentProductPrice: productDetails.currentPrice,
-                imageUrl: productDetails.imageUrl,
-                priceHistory: priceHistory,
-                dateRecorded: dateRecorded,
-                youSave: productDetails.youSave 
-            }).catch(error => {
-                console.log(error)
-            })
-        }, 2000)
+    
+        var ref = db.collection('users').doc(user.email).collection('products').doc(item.productTitle)
+        ref.update({
+            productTitle: productDetails.productTitle,
+            currentProductPrice: productDetails.currentPrice,
+            imageUrl: productDetails.imageUrl,
+            priceHistory: priceHistory,
+            dateRecorded: dateRecorded,
+            youSave: productDetails.youSave 
+        }).catch(error => {
+            console.log(error)
+        })
     }       
 }
 
