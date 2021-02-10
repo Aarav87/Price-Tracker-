@@ -198,7 +198,7 @@ async function updateProductDetails(item) {
     if(dateRecorded[dateRecorded.length - 1] != date) {
         priceHistory.push(productDetails.currentPrice)
         dateRecorded.push(date)
-    
+        
         var ref = db.collection('users').doc(user.email).collection('products').doc(item.productTitle)
         ref.update({
             productTitle: productDetails.productTitle,
