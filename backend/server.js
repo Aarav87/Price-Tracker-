@@ -182,8 +182,8 @@ app.post('/deleteProduct', function(req, res) {
         
 })
 
-async function updateProductDetails(item) {
-    setInterval(() =>  {
+function updateProductDetails(item) {
+    setInterval(async () =>  {
         const productDetails = await getProductDetails(item.url)
         console.log(productDetails)
         
