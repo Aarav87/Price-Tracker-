@@ -182,37 +182,35 @@ app.post('/deleteProduct', function(req, res) {
         
 })
 
-function updateProductDetails(item) {
-    setInterval(async () =>  {
-        const productDetails = await getProductDetails(item.url)
-        console.log(productDetails)
+async function updateProductDetails(item) {
+    const productDetails = await getProductDetails(item.url)
+    console.log(productDetails)
+    
+    const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+    const today = new Date();
+    const dd = today.getDate() - 1
+    const mm = today.getMonth()
+    const date = `${String(months[mm])} ${String(dd)}`
+
+    const priceHistory = item.priceHistory
+    const dateRecorded = item.dateRecorded  
+
+    if(dateRecorded[dateRecorded.length - 1] != date) {
+        priceHistory.push(productDetails.currentPrice)
+        dateRecorded.push(date)
         
-        const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
-        const today = new Date();
-        const dd = today.getDate() - 1
-        const mm = today.getMonth()
-        const date = `${String(months[mm])} ${String(dd)}`
-
-        const priceHistory = item.priceHistory
-        const dateRecorded = item.dateRecorded  
-
-        if(dateRecorded[dateRecorded.length - 1] != date) {
-            priceHistory.push(productDetails.currentPrice)
-            dateRecorded.push(date)
-            
-            var ref = db.collection('users').doc(user.email).collection('products').doc(item.productTitle)
-            ref.update({
-                productTitle: productDetails.productTitle,
-                currentProductPrice: productDetails.currentPrice,
-                imageUrl: productDetails.imageUrl,
-                priceHistory: priceHistory,
-                dateRecorded: dateRecorded,
-                youSave: productDetails.youSave 
-            }).catch(error => {
-                console.log(error)
-            })
-        }       
-    }, 3000)
+        var ref = db.collection('users').doc(user.email).collection('products').doc(item.productTitle)
+        ref.update({
+            productTitle: productDetails.productTitle,
+            currentProductPrice: productDetails.currentPrice,
+            imageUrl: productDetails.imageUrl,
+            priceHistory: priceHistory,
+            dateRecorded: dateRecorded,
+            youSave: productDetails.youSave 
+        }).catch(error => {
+            console.log(error)
+        })
+    }       
 }
 
 function checkPrice() {
