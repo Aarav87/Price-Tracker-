@@ -184,11 +184,10 @@ app.post('/deleteProduct', function(req, res) {
 
 async function updateProductDetails(item) {
     const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
-    const today = new Date();
-    const dd = today.getDate().getTimezoneOffset()
-    const mm = today.getMonth().getTimezoneOffset()
+    const today = new Date()
+    const dd = today.getDate()
+    const mm = today.getMonth()
     const date = `${String(months[mm])} ${String(dd)}`
-    console.log(date)
 
     const priceHistory = item.priceHistory
     const dateRecorded = item.dateRecorded  
@@ -276,7 +275,7 @@ function priceMet() {
     }
 }
 
-setInterval(checkPrice, 1800000)
-setInterval(priceMet, 3600000)
+setInterval(checkPrice, 43200000)
+setInterval(priceMet, 46800000)
 
 app.listen(PORT);
