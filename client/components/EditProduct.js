@@ -90,18 +90,20 @@ export default class EditProduct extends Component {
                         <input style={{width: '200px'}} type="number" min="0" value={this.state.desired_price} placeholder="Desired Price" readonly="true"/> 
                     </div>
                     <hr style={{border: 'none', borderBottom: '1px solid #000000', width: '90%', paddingTop: '5px'}} /> 
+                    <div style={{paddingLeft: '30px'}}>
+                        <input style={{float: 'left', border: 'none',  outline: 'none', width: '100px', fontSize: '15px'}} readonly="true" value="Desired Price:" />
+                    </div>
+                    <div style={{paddingRight: '25px'}}>
+                        <input style={{float: 'right', width: '200px'}} type="number" name="desired_price" maxlength={this.state.list.desired_price.slice(4, this.state.list.desired_price.length).length} value={this.state.desired_price} onChange={this.onChange} />
+                    </div>
                 </div>
-                <div style={{backgroundColor: '#fff', paddingLeft: '150px', height: '100px'}}>
-                    <p style={{position: 'fixed', left: '20px'}}>Desired Price</p>
-                    <input style={{width: '200px'}} type="number" name="desired_price" maxlength={this.state.list.desired_price.slice(4, this.state.list.desired_price.length).length} value={this.state.desired_price} onChange={this.onChange} />
-                </div>
-                <div style={{width: '93%', position: 'fixed', left: '25px', top: '190px'}}>
+                <div style={{position: 'fixed', left: '20px', top: '190px', width: '90%'}}>
                     <Line 
                         data={this.state.data}
                         options={this.state.options}
                     />
                 </div>
-                <div style={{backgroundColor: '#FFFFFF', height: '70px', position: 'fixed', bottom: '0px', left: '20px', width: '96%'}}>
+                <div style={{backgroundColor: '#FFFFFF', height: '40px', position: 'fixed', bottom: '0px', left: '20px', width: '96%'}}>
                     <button 
                         style={{position: 'fixed', bottom: '10px', left: '15px', width: '45%', border: '1px solid rgb(206, 212, 218)', borderRadius: '5px', backgroundColor: '#FFFFFF', height: '40px'}} 
                         onClick={e => this.onClose(e)}
