@@ -222,11 +222,11 @@ function checkPrice() {
                 });
 
                 if(Array.isArray(items) || !items === null) {
-                    items.forEach(item => {
-                        setTimeout(item => {
+                    items.forEach((item, index) => {
+                        setTimeout(() => {
                             updateProductDetails(item)
                             console.log(item)
-                        }, 5000)
+                        }, index * 5000)
                     })
                 } 
             })
