@@ -182,6 +182,34 @@ app.post('/deleteProduct', function(req, res) {
         
 })
 
+async function updateProductDetails(item) {
+    const productDetails = await getProductDetails(item.url)
+    const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+    const today = new Date()
+    const dd = today.getDate()
+    const mm = today.getMonth()
+    const date = `${String(months[mm])} ${String(dd)}`
+
+    const priceHistory = item.priceHistory
+    const dateRecorded = item.dateRecorded  
+
+    if(dateRecorded[dateRecorded.length - 1] != date) {
+        priceHistory.push(productDetails.currentPrice)
+        dateRecorded.push(date)
+        
+        var ref = db.collection('users').doc(user.email).collection('products').doc(item.productTitle)
+        ref.update({
+            currentProductPrice: productDetails.currentPrice,
+            imageUrl: productDetails.imageUrl,
+            priceHistory: priceHistory,
+            dateRecorded: dateRecorded,
+            youSave: productDetails.youSave 
+        }).catch(error => {
+            console.log(error)
+        })
+    }       
+}
+
 function checkPrice() {
     if(user) {
         db.collection(`/users/${user.email}/products`)
@@ -195,31 +223,7 @@ function checkPrice() {
 
                 if(Array.isArray(items) || !items === null) {
                     items.forEach(item => {
-                        const productDetails = await getProductDetails(item.url)
-                        const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
-                        const today = new Date()
-                        const dd = today.getDate()
-                        const mm = today.getMonth()
-                        const date = `${String(months[mm])} ${String(dd)}`
-
-                        const priceHistory = item.priceHistory
-                        const dateRecorded = item.dateRecorded  
-
-                        if(dateRecorded[dateRecorded.length - 1] != date) {
-                            priceHistory.push(productDetails.currentPrice)
-                            dateRecorded.push(date)
-                            
-                            var ref = db.collection('users').doc(user.email).collection('products').doc(item.productTitle)
-                            ref.update({
-                                currentProductPrice: productDetails.currentPrice,
-                                imageUrl: productDetails.imageUrl,
-                                priceHistory: priceHistory,
-                                dateRecorded: dateRecorded,
-                                youSave: productDetails.youSave 
-                            }).catch(error => {
-                                console.log(error)
-                            })
-                        }       
+                        updateProductDetails(item)
                     })
                 } 
             })
