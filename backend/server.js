@@ -223,7 +223,10 @@ function checkPrice() {
 
                 if(Array.isArray(items) || !items === null) {
                     items.forEach(item => {
-                        updateProductDetails(item)
+                        setTimeout(item => {
+                            updateProductDetails(item)
+                            console.log(item)
+                        }, 5000)
                     })
                 } 
             })
