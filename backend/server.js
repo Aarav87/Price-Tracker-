@@ -233,7 +233,7 @@ async function checkPrice() {
                         })
                     } 
                 })
-        }, index * 10000)
+        }, index * 20000)
     })
 }
 
@@ -282,7 +282,7 @@ function priceMet() {
     }
 }
 
-setInterval(checkPrice, 5000)
+setInterval(checkPrice, 10000)
 setInterval(priceMet, 3600000)
 
 app.listen(PORT);
