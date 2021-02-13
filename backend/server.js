@@ -214,7 +214,7 @@ async function checkPrice() {
     const listUsers = await admin.auth().listUsers()
     
     listUsers[0][users].forEach(user => {
-        db.collection(`/users/${UserRecord.email}/products`)
+        db.collection(`/users/${user.UserRecord.email}/products`)
             .get()
             .then(snapshot => {
                 const items = [];
