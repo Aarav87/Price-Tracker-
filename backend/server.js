@@ -233,7 +233,7 @@ async function checkPrice() {
                         })
                     } 
                 })
-        }, index * 10000)
+        }, 20000)
     })
 }
 
