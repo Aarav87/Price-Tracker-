@@ -71,7 +71,7 @@ async function getProductDetails(url) {
     try {
         const browser = await puppeteer.launch({args: ["--no-sandbox"]})
         const page = await browser.newPage()
-        await page.goto(url, {waitUntil: 'load', timeout: 0})
+        await page.goto(url)
 
         const getProductDetails = await page.evaluate(() => {
             const productTitle = document.querySelector('#productTitle').innerText;
@@ -112,7 +112,6 @@ async function getProductDetails(url) {
 
 app.post('/getProductDetails', async function(req, res) {
     var url = req.body.url
-    console.log(url)
     const productDetails = await getProductDetails(url)
     
     setTimeout(() => {
