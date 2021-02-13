@@ -229,7 +229,7 @@ async function checkPrice() {
                         items.forEach((item, index) => {
                             setTimeout(() => {
                                 updateProductDetails(item, email)
-                            }, index * 50000)
+                            }, index * 5000)
                         })
                     } 
                 })
