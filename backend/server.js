@@ -210,38 +210,29 @@ async function updateProductDetails(item) {
     }       
 }
 
-function checkPrice() {
-    db.collection(`users`)
-        .get()
-        .then(snapshot => {
-            const users = [];
-            snapshot.forEach(document => {
-                const data = document.data();
-                users.push(data);
-            });
+async function checkPrice() {
+    const listUsers = await admin.auth().listUsers()
+    console.log(listUsers)
+    if(user) {
+        db.collection(`/users/${user.email}/products`)
+            .get()
+            .then(snapshot => {
+                const items = [];
+                snapshot.forEach(document => {
+                    const data = document.data();
+                    items.push(data);
+                });
 
-            console.log(users)
-            users.forEach(user => {
-                db.collection(`/users/${user}/products`)
-                    .get()
-                    .then(snapshot => {
-                        const items = [];
-                        snapshot.forEach(document => {
-                            const data = document.data();
-                            items.push(data);
-                        });
-
-                        if(Array.isArray(items) || !items === null) {
-                            items.forEach((item, index) => {
-                                setTimeout(() => {
-                                    updateProductDetails(item)
-                                    console.log(item)
-                                }, index * 5000)
-                            })
-                        }
+                if(Array.isArray(items) || !items === null) {
+                    items.forEach((item, index) => {
+                        setTimeout(() => {
+                            updateProductDetails(item)
+                            console.log(item)
+                        }, index * 5000)
                     })
+                } 
             })
-        })
+    }
 }
 
 function priceMet() {
