@@ -211,7 +211,7 @@ async function updateProductDetails(item) {
 }
 
 function checkPrice() {
-    db.collection(`/users/`)
+    db.collection(`users`)
         .get()
         .then(snapshot => {
             const users = [];
