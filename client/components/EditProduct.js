@@ -25,10 +25,12 @@ export default class EditProduct extends Component {
     saveChanges() {
         const productTitle = this.state.list.productTitle.replace('/', ' ')
         const desired_price = this.state.desired_price
+        const user = firebase.auth().currentUser;
         
         const data = {
             productTitle: productTitle,
-            desired_price: desired_price
+            desired_price: desired_price,
+            email: user.email
         }
 
         axios.post(`${process.env.REACT_APP_BACKEND_URL}/saveChanges`, data)

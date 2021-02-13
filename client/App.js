@@ -61,7 +61,11 @@ class App extends Component {
 }
 
   updateList() {
-    axios.post(`${process.env.REACT_APP_BACKEND_URL}/updateList`)
+    const data = {
+      email: this.state.user.email
+    }
+
+    axios.post(`${process.env.REACT_APP_BACKEND_URL}/updateList`, data)
       .then((response) => {
         this.setState({
           items: response.data,
@@ -136,7 +140,8 @@ class App extends Component {
       imageUrl: this.state.imageUrl,
       priceHistory: [], 
       dateRecorded: [],
-      youSave: this.state.youSave
+      youSave: this.state.youSave,
+      email: this.state.user.email
     }
 
     axios.post(`${process.env.REACT_APP_BACKEND_URL}/addProduct`, data)

@@ -35,9 +35,11 @@ export default class ProductList extends Component {
 
     deleteProduct() {
         const productTitle = this.state.list.productTitle.replace('/', ' ')
+        const user = firebase.auth().currentUser;
 
         const data = {
-            productTitle: productTitle
+            productTitle: productTitle,
+            email: user.email
         }
 
         axios.post(`${process.env.REACT_APP_BACKEND_URL}/deleteProduct`, data)

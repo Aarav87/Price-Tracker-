@@ -41,7 +41,6 @@ admin.initializeApp({
 
 const db = admin.firestore()
 const auth = admin.auth()
-var user = null
 
 let transporter = nodemailer.createTransport({
     host: 'smtp.googlemail.com',
@@ -53,22 +52,8 @@ let transporter = nodemailer.createTransport({
     }
 });
 
-app.post('/onLogin', function(req, res) {
-    const email = req.body.email
-
-    auth
-        .getUserByEmail(email)
-        .then((userRecord) => {
-            user = userRecord.toJSON()
-            console.log(user)
-        })
-        .catch((error) => {
-            console.log('Error fetching user data:', error);
-        });
-})
-
 app.post('/updateList', function(req, res) {
-    db.collection(`/users/${user.email}/products`)
+    db.collection(`/users/${req.body.email}/products`)
       .get()
       .then(snapshot => {
         const items = []
@@ -143,10 +128,11 @@ app.post('/addProduct', function(req, res) {
         imageUrl: req.body.imageUrl,
         priceHistory: req.body.priceHistory,
         dateRecorded: req.body.dateRecorded,
-        youSave: req.body.youSave
+        youSave: req.body.youSave,
+        email: req.body.email
     }
 
-    var ref = db.collection('users').doc(user.email).collection('products').doc(data.productTitle)
+    var ref = db.collection('users').doc(data.email).collection('products').doc(data.productTitle)
     ref.set({ 
       url: data.url,
       productTitle: data.productTitle,
@@ -164,10 +150,11 @@ app.post('/addProduct', function(req, res) {
 app.post('/saveChanges', function(req, res) {
     const data = {
         productTitle: req.body.productTitle,
-        desired_price: req.body.desired_price
+        desired_price: req.body.desired_price,
+        email: req.body.email
     }
 
-    var ref = db.collection('users').doc(user.email).collection('products').doc(data.productTitle)
+    var ref = db.collection('users').doc(data.email).collection('products').doc(data.productTitle)
     ref.update({
         desired_price: data.desired_price
     }) 
@@ -175,9 +162,10 @@ app.post('/saveChanges', function(req, res) {
 
 app.post('/deleteProduct', function(req, res) {
     const productTitle = req.body.productTitle
+    const email = req.body.email
     
 
-    var ref = db.collection('users').doc(user.email).collection('products').doc(productTitle)
+    var ref = db.collection('users').doc(email).collection('products').doc(productTitle)
     ref.delete() 
         
 })
