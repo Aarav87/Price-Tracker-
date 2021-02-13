@@ -212,27 +212,28 @@ async function updateProductDetails(item) {
 
 async function checkPrice() {
     const listUsers = await admin.auth().listUsers()
+    console.log(listUsers)
     
-    listUsers[0].forEach(user => {
-        db.collection(`/users/${user.UserRecord.email}/products`)
-            .get()
-            .then(snapshot => {
-                const items = [];
-                snapshot.forEach(document => {
-                    const data = document.data();
-                    items.push(data);
-                });
+    // listUsers[0].forEach(user => {
+    //     db.collection(`/users/${user.UserRecord.email}/products`)
+    //         .get()
+    //         .then(snapshot => {
+    //             const items = [];
+    //             snapshot.forEach(document => {
+    //                 const data = document.data();
+    //                 items.push(data);
+    //             });
 
-                if(Array.isArray(items) || !items === null) {
-                    items.forEach((item, index) => {
-                        setTimeout(() => {
-                            updateProductDetails(item)
-                            console.log(item)
-                        }, index * 5000)
-                    })
-                } 
-            })
-    })
+    //             if(Array.isArray(items) || !items === null) {
+    //                 items.forEach((item, index) => {
+    //                     setTimeout(() => {
+    //                         updateProductDetails(item)
+    //                         console.log(item)
+    //                     }, index * 5000)
+    //                 })
+    //             } 
+    //         })
+    // })
 }
 
 function priceMet() {
