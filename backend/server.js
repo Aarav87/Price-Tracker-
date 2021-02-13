@@ -213,7 +213,7 @@ async function updateProductDetails(item) {
 async function checkPrice() {
     const listUsers = await admin.auth().listUsers()
     
-    listUsers[users].forEach(user => {
+    listUsers.forEach(user => {
         db.collection(`/users/${UserRecord.email}/products`)
             .get()
             .then(snapshot => {
