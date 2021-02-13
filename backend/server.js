@@ -202,8 +202,8 @@ async function checkPrice() {
     const listUsers = await admin.auth().listUsers()
         
     Object.values(listUsers)[0].forEach((user, index) => {
+        const email = user.toJSON()['email']
         setTimeout(() => {
-            const email = user.toJSON()['email']
             db.collection(`/users/${email}/products`)
                 .get()
                 .then(snapshot => {
