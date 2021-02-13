@@ -225,6 +225,7 @@ async function checkPrice() {
                         items.push(data);
                     });
 
+                    console.log(items)
                     if(Array.isArray(items) || !items === null) {
                         items.forEach((item, index) => {
                             setTimeout(() => {
