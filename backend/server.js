@@ -211,26 +211,37 @@ async function updateProductDetails(item) {
 }
 
 function checkPrice() {
-    if(user) {
-        db.collection(`/users/${user.email}/products`)
-            .get()
-            .then(snapshot => {
-                const items = [];
-                snapshot.forEach(document => {
-                    const data = document.data();
-                    items.push(data);
-                });
+    db.collection(`/users/`)
+        .get()
+        .then(snapshot => {
+            const users = [];
+            snapshot.forEach(document => {
+                const data = document.data();
+                users.push(data);
+            });
 
-                if(Array.isArray(items) || !items === null) {
-                    items.forEach((item, index) => {
-                        setTimeout(() => {
-                            updateProductDetails(item)
-                            console.log(item)
-                        }, index * 5000)
+            console.log(users)
+            users.forEach(user => {
+                db.collection(`/users/${user}/products`)
+                    .get()
+                    .then(snapshot => {
+                        const items = [];
+                        snapshot.forEach(document => {
+                            const data = document.data();
+                            items.push(data);
+                        });
+
+                        if(Array.isArray(items) || !items === null) {
+                            items.forEach((item, index) => {
+                                setTimeout(() => {
+                                    updateProductDetails(item)
+                                    console.log(item)
+                                }, index * 5000)
+                            })
+                        }
                     })
-                } 
             })
-    }
+        })
 }
 
 function priceMet() {
@@ -278,7 +289,7 @@ function priceMet() {
     }
 }
 
-setInterval(checkPrice, 1800000)
+setInterval(checkPrice, 5000)
 setInterval(priceMet, 3600000)
 
 app.listen(PORT);
