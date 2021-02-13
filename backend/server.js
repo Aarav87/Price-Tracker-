@@ -225,7 +225,7 @@ async function checkPrice() {
     })
 }
 
-function priceMet() {
+async function priceMet() {
     const listUsers = await admin.auth().listUsers()
         
     Object.values(listUsers)[0].forEach((user, index) => {
