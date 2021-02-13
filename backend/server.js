@@ -270,7 +270,7 @@ function priceMet() {
     }
 }
 
-setInterval(checkPrice, 10000)
+setInterval(checkPrice, 50000)
 setInterval(priceMet, 3600000)
 
 app.listen(PORT);

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons/';
 import EditProduct from './EditProduct'
 import axios from 'axios';
+import { auth } from '../firebase';
 
 export default class ProductList extends Component {
     constructor(props) {
@@ -35,7 +36,7 @@ export default class ProductList extends Component {
 
     deleteProduct() {
         const productTitle = this.state.list.productTitle.replace('/', ' ')
-        const user = firebase.auth().currentUser;
+        const user = auth.currentUser;
 
         const data = {
             productTitle: productTitle,

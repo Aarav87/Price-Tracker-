@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Line } from 'react-chartjs-2';
 import axios from 'axios';
+import { auth } from '../firebase';
 
 export default class EditProduct extends Component {
     constructor(props) {
@@ -25,7 +26,7 @@ export default class EditProduct extends Component {
     saveChanges() {
         const productTitle = this.state.list.productTitle.replace('/', ' ')
         const desired_price = this.state.desired_price
-        const user = firebase.auth().currentUser;
+        const user = auth.currentUser;
         
         const data = {
             productTitle: productTitle,
