@@ -47,6 +47,7 @@ class App extends Component {
   }
   
   componentDidMount() {
+    if(window.location.href.slice(0, 22) === "https://www.amazon.ca/")
     auth.onAuthStateChanged((user) => {      
       if (user) {
         this.setState({ user })
