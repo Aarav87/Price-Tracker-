@@ -98,6 +98,7 @@ async function getProductDetails(url) {
 
             
            return data
+           console.log(data)
         })
 
         productDetails = getProductDetails
@@ -113,6 +114,7 @@ async function getProductDetails(url) {
 app.post('/getProductDetails', async function(req, res) {
     var url = req.body.url
     const productDetails = await getProductDetails(url)
+    console.log(productDetails)
     
     setTimeout(() => {
         res.send(productDetails)
