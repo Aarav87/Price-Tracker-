@@ -182,7 +182,7 @@ app.post('/deleteProduct', function(req, res) {
         
 })
 
-async function updateProductDetails(item) {
+async function updateProductDetails(item, email) {
     const productDetails = await getProductDetails(item.url)
     const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
     const today = new Date()
@@ -197,7 +197,7 @@ async function updateProductDetails(item) {
         priceHistory.push(productDetails.currentPrice)
         dateRecorded.push(date)
         
-        var ref = db.collection('users').doc(user.email).collection('products').doc(item.productTitle)
+        var ref = db.collection('users').doc(email).collection('products').doc(item.productTitle)
         ref.update({
             currentProductPrice: productDetails.currentPrice,
             imageUrl: productDetails.imageUrl,
@@ -214,8 +214,9 @@ async function checkPrice() {
     const listUsers = await admin.auth().listUsers()
         
     Object.values(listUsers)[0].forEach((user, index) => {
+        const email = user.toJSON()['email']
         setTimeout(() => {
-            db.collection(`/users/${user.toJSON()['email']}/products`)
+            db.collection(`/users/${email}/products`)
                 .get()
                 .then(snapshot => {
                     const items = [];
@@ -227,7 +228,7 @@ async function checkPrice() {
                     if(Array.isArray(items) || !items === null) {
                         items.forEach((item, index) => {
                             setTimeout(() => {
-                                updateProductDetails(item)
+                                updateProductDetails(item, email)
                             }, index * 5000)
                         })
                     } 
@@ -281,7 +282,7 @@ function priceMet() {
     }
 }
 
-setInterval(checkPrice, 5000)
+setInterval(checkPrice, 10000)
 setInterval(priceMet, 3600000)
 
 app.listen(PORT);
