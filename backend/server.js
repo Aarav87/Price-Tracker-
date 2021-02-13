@@ -197,7 +197,6 @@ async function updateProductDetails(item, email) {
         priceHistory.push(productDetails.currentPrice)
         dateRecorded.push(date)
         
-        console.log(email)
         var ref = db.collection('users').doc(email).collection('products').doc(item.productTitle)
         ref.update({
             currentProductPrice: productDetails.currentPrice,
@@ -230,7 +229,7 @@ async function checkPrice() {
                         items.forEach((item, index) => {
                             setTimeout(() => {
                                 updateProductDetails(item, email)
-                            }, index * 5000)
+                            }, index * 10000)
                         })
                     } 
                 })
