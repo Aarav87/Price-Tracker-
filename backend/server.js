@@ -215,23 +215,25 @@ async function checkPrice() {
         
     Object.values(listUsers)[0].forEach((user, index) => {
         const email = user.toJSON()['email']
-        db.collection(`/users/${email}/products`)
-            .get()
-            .then(snapshot => {
-                const items = [];
-                snapshot.forEach(document => {
-                    const data = document.data();
-                    items.push(data);
-                });
+        setTimeout(() => {
+            db.collection(`/users/${email}/products`)
+                .get()
+                .then(snapshot => {
+                    const items = [];
+                    snapshot.forEach(document => {
+                        const data = document.data();
+                        items.push(data);
+                    });
 
-                if(Array.isArray(items) || !items === null) {
-                    items.forEach((item, index) => {
-                        setTimeout(() => {
-                            updateProductDetails(item, email)
-                        }, index * 5000)
-                    })
-                } 
-            })
+                    if(Array.isArray(items) || !items === null) {
+                        items.forEach((item, index) => {
+                            setTimeout(() => {
+                                updateProductDetails(item, email)
+                            }, index * 5000)
+                        })
+                    } 
+                })
+        }, index * 10000)
     })
 }
 
