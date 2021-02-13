@@ -203,25 +203,23 @@ async function checkPrice() {
         
     Object.values(listUsers)[0].forEach((user, index) => {
         const email = user.toJSON()['email']
-        setTimeout(() => {
-            db.collection(`/users/${email}/products`)
-                .get()
-                .then(snapshot => {
-                    const items = [];
-                    snapshot.forEach(document => {
-                        const data = document.data();
-                        items.push(data);
-                    });
+        db.collection(`/users/${email}/products`)
+            .get()
+            .then(snapshot => {
+                const items = [];
+                snapshot.forEach(document => {
+                    const data = document.data();
+                    items.push(data);
+                });
 
-                    if(Array.isArray(items) || !items === null) {
-                        items.forEach((item, index) => {
-                            setTimeout(() => {
-                                updateProductDetails(item, email)
-                            }, index * 5000)
-                        })
-                    } 
-                })
-        }, index * 10000)
+                if(Array.isArray(items) || !items === null) {
+                    items.forEach((item, index) => {
+                        setTimeout(() => {
+                            updateProductDetails(item, email)
+                        }, index * 5000)
+                    })
+                } 
+            })
     })
 }
 
@@ -277,6 +275,6 @@ async function priceMet() {
 }
 
 setInterval(checkPrice, 1800000)
-setInterval(priceMet, 3600000)
+setInterval(priceMet, 43200000)
 
 app.listen(PORT);
