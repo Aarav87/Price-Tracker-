@@ -202,8 +202,8 @@ async function checkPrice() {
     const listUsers = await admin.auth().listUsers()
         
     Object.values(listUsers)[0].forEach((user, index) => {
-        const email = user.toJSON()['email']
         setTimeout(() => {
+            const email = user.toJSON()['email']
             db.collection(`/users/${email}/products`)
                 .get()
                 .then(snapshot => {
@@ -221,58 +221,60 @@ async function checkPrice() {
                         })
                     } 
                 })
-        }, index * 10000)
+        }, index * 20000)
     })
 }
 
 async function priceMet() {
     const listUsers = await admin.auth().listUsers()
         
-    Object.values(listUsers)[0].forEach(user => {
-        const email = user.toJSON()['email']
-        db.collection(`/users/${email}/products`)
-            .get()
-            .then(snapshot => {
-                const items = [];
-                snapshot.forEach(document => {
-                    const data = document.data();
-                    items.push(data);
-                });
+    Object.values(listUsers)[0].forEach((user, index) => {
+        setTimeout(() => {
+            const email = user.toJSON()['email']
+            db.collection(`/users/${email}/products`)
+                .get()
+                .then(snapshot => {
+                    const items = [];
+                    snapshot.forEach(document => {
+                        const data = document.data();
+                        items.push(data);
+                    });
 
-                if(Array.isArray(items) || !items === null) {
-                    items.forEach((item, index) => {
-                        setTimeout(() => {
-                            items.forEach(item => {
-                                const currentProductPrice = parseInt(item.currentProductPrice.slice(5, item.currentProductPrice.length), 10)
-                                const desiredPrice = parseInt(item.desired_price, 10)
+                    if(Array.isArray(items) || !items === null) {
+                        items.forEach((item, index) => {
+                            setTimeout(() => {
+                                items.forEach(item => {
+                                    const currentProductPrice = parseInt(item.currentProductPrice.slice(5, item.currentProductPrice.length), 10)
+                                    const desiredPrice = parseInt(item.desired_price, 10)
 
-                                if(currentProductPrice < desiredPrice) {
-                                    const productTitle = item.productTitle
-                                    const url = item.url
+                                    if(currentProductPrice < desiredPrice) {
+                                        const productTitle = item.productTitle
+                                        const url = item.url
 
-                                    const message = {
-                                        from: 'Price Tracker', 
-                                        to: user.email,         
-                                        subject: `Price of ${productTitle.slice(0, 27)} is lower!`, 
-                                        text: `The price of ${productTitle.slice(0, 27)} is below your desired price and is now in your price range! Go check it out at ${url}`
-                                    };
-                                
-                                    transporter.sendMail(message, function(err, info) {
-                                        if (err) {
-                                            console.log(err)
-                                        } else {
-                                            console.log(info);
-                                        }
-                                    });
+                                        const message = {
+                                            from: 'Price Tracker', 
+                                            to: user.email,         
+                                            subject: `Price of ${productTitle.slice(0, 27)} is lower!`, 
+                                            text: `The price of ${productTitle.slice(0, 27)} is below your desired price and is now in your price range! Go check it out at ${url}`
+                                        };
+                                    
+                                        transporter.sendMail(message, function(err, info) {
+                                            if (err) {
+                                                console.log(err)
+                                            } else {
+                                                console.log(info);
+                                            }
+                                        });
 
-                                    var ref = db.collection('users').doc(user.email).collection('products').doc(item.productTitle)
-                                    ref.delete()       
-                                } 
-                            })
-                        }, index * 5000)
-                    })
-                } 
-            })
+                                        var ref = db.collection('users').doc(user.email).collection('products').doc(item.productTitle)
+                                        ref.delete()       
+                                    } 
+                                })
+                            }, index * 5000)
+                        })
+                    } 
+                })
+        }, index * 20000)
     })
 }
 
