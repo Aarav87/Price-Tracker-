@@ -132,6 +132,8 @@ app.post('/addProduct', function(req, res) {
         email: req.body.email
     }
 
+    console.log(data.email)
+
     var ref = db.collection('users').doc(data.email).collection('products').doc(data.productTitle)
     ref.set({ 
       url: data.url,
