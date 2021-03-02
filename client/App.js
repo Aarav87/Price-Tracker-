@@ -154,7 +154,7 @@ class App extends Component {
     })
 
     setTimeout(this.getProductDetails, 2000)
-    setTimeout(this.addProduct, 10000)
+    setTimeout(this.addProduct, 9000)
     setTimeout(this.updateList, 12000)
 
   }
