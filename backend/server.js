@@ -221,7 +221,7 @@ async function checkPrice() {
                         })
                     } 
                 })
-        }, index * 40000)
+        }, index * 30000)
     })
 }
 
@@ -274,7 +274,7 @@ async function priceMet() {
                         })
                     } 
                 })
-        }, index * 40000)
+        }, index * 30000)
     })
 }
 
