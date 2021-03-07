@@ -116,7 +116,7 @@ app.post('/getProductDetails', async function(req, res) {
     
     setTimeout(() => {
         res.send(productDetails)
-    }, 3000)
+    }, 5000)
 })
 
 app.post('/addProduct', function(req, res) {
