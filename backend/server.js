@@ -221,7 +221,7 @@ async function checkPrice() {
                         })
                     } 
                 })
-        }, index * 20000)
+        }, index * 40000)
     })
 }
 
@@ -253,7 +253,7 @@ async function priceMet() {
 
                                         const message = {
                                             from: 'Price Tracker', 
-                                            to: user.email,         
+                                            to: email,         
                                             subject: `Price of ${productTitle.slice(0, 27)} is lower!`, 
                                             text: `The price of ${productTitle.slice(0, 27)} is below your desired price and is now in your price range! Go check it out at ${url}`
                                         };
@@ -274,11 +274,11 @@ async function priceMet() {
                         })
                     } 
                 })
-        }, index * 20000)
+        }, index * 40000)
     })
 }
 
-setInterval(checkPrice, 36000000)
-setInterval(priceMet, 43200000)
+setInterval(checkPrice, 18000000)
+setInterval(priceMet, 25200000)
 
 app.listen(PORT);
