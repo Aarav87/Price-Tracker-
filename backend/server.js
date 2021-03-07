@@ -116,7 +116,7 @@ app.post('/getProductDetails', async function(req, res) {
     
     setTimeout(() => {
         res.send(productDetails)
-    }, 2000)
+    }, 3000)
 })
 
 app.post('/addProduct', function(req, res) {
@@ -221,7 +221,7 @@ async function checkPrice() {
                         })
                     } 
                 })
-        }, index * 25000)
+        }, index * 20000)
     })
 }
 
@@ -274,7 +274,7 @@ async function priceMet() {
                         })
                     } 
                 })
-        }, index * 25000)
+        }, index * 20000)
     })
 }
 
