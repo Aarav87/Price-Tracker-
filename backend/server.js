@@ -266,7 +266,7 @@ async function priceMet() {
                                             }
                                         });
 
-                                        var ref = db.collection('users').doc(user.email).collection('products').doc(item.productTitle)
+                                        var ref = db.collection('users').doc(email).collection('products').doc(item.productTitle)
                                         ref.delete()       
                                     } 
                                 })
@@ -278,7 +278,7 @@ async function priceMet() {
     })
 }
 
-setInterval(checkPrice, 18000000)
-setInterval(priceMet, 25200000)
+setInterval(checkPrice, 21600000)
+setInterval(priceMet, 28800000)
 
 app.listen(PORT);
