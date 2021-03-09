@@ -42,16 +42,6 @@ admin.initializeApp({
 const db = admin.firestore()
 const auth = admin.auth()
 
-let transporter = nodemailer.createTransport({
-    host: 'smtp.googlemail.com',
-    port: 465, 
-    secure: true, 
-    auth: {
-        user: process.env.EMAIL, 
-        pass: process.env.PASSWORD
-    }
-});
-
 app.post('/updateList', function(req, res) {
     db.collection(`/users/${req.body.email}/products`)
       .get()
@@ -250,6 +240,16 @@ async function priceMet() {
                                     if(currentProductPrice < desiredPrice) {
                                         const productTitle = item.productTitle
                                         const url = item.url
+
+                                        let transporter = nodemailer.createTransport({
+                                            host: 'smtp.googlemail.com',
+                                            port: 465, 
+                                            secure: true, 
+                                            auth: {
+                                                user: process.env.EMAIL, 
+                                                pass: process.env.PASSWORD
+                                            }
+                                        });
 
                                         const message = {
                                             from: 'Price Tracker', 
