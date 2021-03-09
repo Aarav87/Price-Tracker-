@@ -274,7 +274,7 @@ async function priceMet() {
                         })
                     } 
                 })
-        }, index * 20000)
+        }, index * 40000)
     })
 }
 
