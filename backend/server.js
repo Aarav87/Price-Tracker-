@@ -211,7 +211,7 @@ async function checkPrice() {
                         })
                     } 
                 })
-        }, index * 20000)
+        }, index * 40000)
     })
 }
 
@@ -270,7 +270,7 @@ async function priceMet() {
                                         ref.delete()       
                                     } 
                                 })
-                            }, index * 10000)
+                            }, index * 5000)
                         })
                     } 
                 })
