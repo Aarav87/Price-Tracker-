@@ -252,7 +252,7 @@ async function priceMet() {
                                         });
 
                                         const message = {
-                                            from: 'Price Tracker', 
+                                            from: process.env.EMAIL, 
                                             to: email,         
                                             subject: `Price of ${productTitle.slice(0, 27)} is lower!`, 
                                             text: `The price of ${productTitle.slice(0, 27)} is below your desired price and is now in your price range! Go check it out at ${url}`
