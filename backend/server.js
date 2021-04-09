@@ -242,9 +242,7 @@ async function priceMet() {
                                         const url = item.url
 
                                         let transporter = nodemailer.createTransport({
-                                            host: 'smtp.googlemail.com',
-                                            port: 465, 
-                                            secure: true, 
+                                            service: 'gmail', 
                                             auth: {
                                                 user: process.env.EMAIL, 
                                                 pass: process.env.PASSWORD
