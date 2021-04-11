@@ -39,6 +39,14 @@ admin.initializeApp({
     credential: admin.credential.cert(serviceAccount)
 })
 
+let transporter = nodemailer.createTransport({
+    service: 'gmail', 
+    auth: {
+        user: process.env.EMAIL, 
+        pass: process.env.PASSWORD
+    }
+});
+
 const db = admin.firestore()
 const auth = admin.auth()
 
@@ -240,14 +248,6 @@ async function priceMet() {
                                     if(currentProductPrice < desiredPrice) {
                                         const productTitle = item.productTitle
                                         const url = item.url
-
-                                        let transporter = nodemailer.createTransport({
-                                            service: 'gmail', 
-                                            auth: {
-                                                user: process.env.EMAIL, 
-                                                pass: process.env.PASSWORD
-                                            }
-                                        });
 
                                         const message = {
                                             from: process.env.EMAIL, 
