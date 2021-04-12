@@ -40,7 +40,9 @@ admin.initializeApp({
 })
 
 let transporter = nodemailer.createTransport({
-    service: 'gmail', 
+    host: 'smtp.googlemail.com',
+    port: 465, 
+    secure: true, 
     auth: {
         user: process.env.EMAIL, 
         pass: process.env.PASSWORD
