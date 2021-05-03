@@ -244,7 +244,7 @@ async function priceMet() {
                         items.forEach((item, index) => {
                             setTimeout(() => {
                                 items.forEach(item => {
-                                    const currentProductPrice = parseInt(item.currentProductPrice.slice(5, item.currentProductPrice.length), 10)
+                                    const currentProductPrice = parseInt(item.currentProductPrice.slice(1, item.currentProductPrice.length), 10)
                                     const desiredPrice = parseInt(item.desired_price, 10)
 
                                     if(currentProductPrice < desiredPrice) {
