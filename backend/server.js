@@ -279,6 +279,6 @@ async function priceMet() {
 }
 
 setInterval(checkPrice, 18000000)
-setInterval(priceMet, 25200000)
+setInterval(priceMet, 25200001)
 
 app.listen(PORT);
