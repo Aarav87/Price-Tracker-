@@ -48,7 +48,7 @@ export default class EditProduct extends Component {
     desiredPrice() {
         const priceHistory = []
         this.state.list.priceHistory.forEach(price => {
-            priceHistory.push(parseInt(price.slice(5, price.length), 10))
+            priceHistory.push(parseInt(price.slice(1, price.length), 10))
         });
 
         this.setState({
