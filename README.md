@@ -34,7 +34,7 @@ Price Tracker is a chrome extension which tracks the prices for Amazon products.
 
 5. Add backend URL in .env file
 
-    REACT_APP_BACKEND_URL=http://localhost:3000
+        REACT_APP_BACKEND_URL=http://localhost:3000
 
 6. Generate a new "Private Key" from Service Account in Firebase Project Settings. 
 
