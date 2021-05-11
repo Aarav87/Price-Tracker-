@@ -7,7 +7,9 @@ const cheerio = require('cheerio')
 const admin = require('firebase-admin')
 const axios = require('axios')
 const puppeteer = require('puppeteer');
+const dotenv = require('dotenv');
 
+dotenv.config()
 const app = express();
 
 //use cors to allow cross origin resource sharing
