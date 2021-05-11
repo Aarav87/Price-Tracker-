@@ -10,7 +10,8 @@
       "firebase-admin": "^9.4.2",
       "axios": "^0.21.0",
       "request": "^2.88.2",
-      "puppeteer": "^7.1.0"
+      "puppeteer": "^7.1.0",
+      "dotenv": "9.0.2"
     },
     "scripts": {
       "start": "node server.js"
