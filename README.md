@@ -14,23 +14,23 @@ Price Tracker is a chrome extension which tracks the prices for Amazon products.
 
 1. Clone the repo
 
-    $ git clone https://github.com/Aarav87/Price-Tracker-.git
+        $ git clone https://github.com/Aarav87/Price-Tracker-.git
 
 2. Install dependencies
     
-    $ npm install
+        $ npm install
 
 3. Create a firestore database and copy the Firebase configuration.
 
 4. Create a .env file inside the client folder. Paste your Firebase configuration keys.
 
-    REACT_APP_FIREBASE_API_KEY=YOUR_FIREBASE_API_KEY
-    REACT_APP_FIREBASE_AUTH_DOMAIN=YOUR_FIREBASE_AUTH_DOMAIN
-    REACT_APP_FIREBASE_DATABASE_URL=YOUR_FIREBASE_DATABASE_URL
-    REACT_APP_FIREBASE_PROJECT_ID=YOUR_FIREBASE_PROJECT_ID
-    REACT_APP_FIREBASE_STORAGE_BUCKET=YOUR_FIREBASE_STORAGE_BUCKET
-    REACT_APP_FIREBASE_MESSAGING_SENDER_ID=YOUR_FIREBASE_MESSAGING_SENDER_ID
-    REACT_APP_FIREBASE_APP_ID=YOUR_FIREBASE_APP_ID
+        REACT_APP_FIREBASE_API_KEY=YOUR_FIREBASE_API_KEY
+        REACT_APP_FIREBASE_AUTH_DOMAIN=YOUR_FIREBASE_AUTH_DOMAIN
+        REACT_APP_FIREBASE_DATABASE_URL=YOUR_FIREBASE_DATABASE_URL
+        REACT_APP_FIREBASE_PROJECT_ID=YOUR_FIREBASE_PROJECT_ID
+        REACT_APP_FIREBASE_STORAGE_BUCKET=YOUR_FIREBASE_STORAGE_BUCKET
+        REACT_APP_FIREBASE_MESSAGING_SENDER_ID=YOUR_FIREBASE_MESSAGING_SENDER_ID
+        REACT_APP_FIREBASE_APP_ID=YOUR_FIREBASE_APP_ID
 
 5. Add backend URL in .env file
 
@@ -40,37 +40,37 @@ Price Tracker is a chrome extension which tracks the prices for Amazon products.
 
 7. Create a .env file inside the backend folder. Paste your "Private Key".
 
-    AUTH_PROVIDER=YOUR_AUTH_PROVIDER
-    AUTH_URI=YOUR_AUTH_URI
-    CERT_URL=YOUR_CERT_URL
-    CLIENT_ID=YOUR_CLIENT_ID
-    CLIENT_EMAIL=YOUR_CLIENT_EMAIL
-    PRIVATE_KEY=YOUR_PRIVATE_KEY
-    PRIVATE_KEY_ID=YOUR_PRIVATE_KEY_ID
-    PROJECT_ID=YOUR_PROJECT_ID
-    TOKEN_URI=YOUR_TOKEN_URI
-    TYPE=service_account
+        AUTH_PROVIDER=YOUR_AUTH_PROVIDER
+        AUTH_URI=YOUR_AUTH_URI
+        CERT_URL=YOUR_CERT_URL
+        CLIENT_ID=YOUR_CLIENT_ID
+        CLIENT_EMAIL=YOUR_CLIENT_EMAIL
+        PRIVATE_KEY=YOUR_PRIVATE_KEY
+        PRIVATE_KEY_ID=YOUR_PRIVATE_KEY_ID
+        PROJECT_ID=YOUR_PROJECT_ID
+        TOKEN_URI=YOUR_TOKEN_URI
+        TYPE=service_account
 
 8. Turn on usage of "Less Secure Apps" from Google settings. Add Google email and password in backend .env file.
 
-    EMAIL=YOUR_EMAIL
-    PASSWORD=YOUR_PASSWORD
+        EMAIL=YOUR_EMAIL
+        PASSWORD=YOUR_PASSWORD
 
 9. Create a build folder
 
-    # Go into directory
-    $ cd Price-Tracker-/client
+        # Go into directory
+        $ cd Price-Tracker-/client
 
-    # Create Build Folder
-    $ npm run build
+        # Create Build Folder
+        $ npm run build
 
 10. Go to chrome://extensions/ and click "Load Unpacked". Select and upload build folder at Price-Tracker/Build.
 
 11. Run backend
 
-    # Go into directory
-    $ cd Price-Tracker-/backend
+        # Go into directory
+        $ cd Price-Tracker-/backend
 
-    # Run backend file
-    $ node server.js
+        # Run backend file
+        $ node server.js
 
