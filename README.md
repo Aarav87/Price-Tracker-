@@ -17,7 +17,11 @@ Price Tracker is a chrome extension which tracks the prices for Amazon products.
         $ git clone https://github.com/Aarav87/Price-Tracker-.git
 
 2. Install dependencies
-    
+
+        # Go into directory
+        $ cd Price-Tracker-
+        
+        # Install
         $ npm install
 
 3. Create a firestore database and copy the Firebase configuration.
