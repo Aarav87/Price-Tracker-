@@ -18,15 +18,11 @@ Price Tracker is a chrome extension which tracks the prices for Amazon products.
 
 2. Install dependencies
 
-        # Go into directory
-        $ cd Price-Tracker-
-        
-        # Install
         $ npm install
 
-3. Create a firestore database and copy the Firebase configuration.
+3. Create a firestore database and copy the Firebase configuration
 
-4. Create a .env file inside the client folder. Paste your Firebase configuration keys.
+4. Create a .env file and paste your Firebase configuration keys
 
         REACT_APP_FIREBASE_API_KEY=YOUR_FIREBASE_API_KEY
         REACT_APP_FIREBASE_AUTH_DOMAIN=YOUR_FIREBASE_AUTH_DOMAIN
@@ -40,9 +36,9 @@ Price Tracker is a chrome extension which tracks the prices for Amazon products.
 
         REACT_APP_BACKEND_URL=http://localhost:3000
 
-6. Generate a new "Private Key" from Service Account in Firebase Project Settings. 
+6. Generate a new "Private Key" from Service Account in Firebase Project Settings
 
-7. Create a .env file inside the backend folder. Paste your "Private Key".
+7. Create a .env file inside the backend folder and paste your "Private Key"
 
         AUTH_PROVIDER=YOUR_AUTH_PROVIDER
         AUTH_URI=YOUR_AUTH_URI
@@ -55,26 +51,18 @@ Price Tracker is a chrome extension which tracks the prices for Amazon products.
         TOKEN_URI=YOUR_TOKEN_URI
         TYPE=service_account
 
-8. Turn on usage of "Less Secure Apps" from Google settings. Add Google email and password in backend .env file.
+8. Add Google email and password in backend .env file
 
         EMAIL=YOUR_EMAIL
         PASSWORD=YOUR_PASSWORD
 
 9. Create a build folder
 
-        # Go into directory
-        $ cd Price-Tracker-/client
-
-        # Create Build Folder
         $ npm run build
 
-10. Go to chrome://extensions/ and click "Load Unpacked". Select and upload build folder at Price-Tracker/Build.
+10. Go to chrome://extensions/ and click "Load Unpacked". Select and upload build folder at Price-Tracker/Build
 
 11. Run backend
 
-        # Go into directory
-        $ cd Price-Tracker-/backend
-
-        # Run backend file
         $ node server.js
 
