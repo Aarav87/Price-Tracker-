@@ -12,7 +12,7 @@ Price Tracker is a chrome extension which tracks the prices for Amazon products.
 
 ## Usage
 
-![alt text](https://github.com/aarav87/Price-Tracker-/blob/master/readme.png?raw=true)
+![alt text](https://github.com/aarav87/Price-Tracker-/blob/master/images/readme.png?raw=true)
 
 ## How To Use
 
